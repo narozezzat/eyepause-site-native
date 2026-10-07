@@ -8,7 +8,6 @@ import type { DownloadOption } from "@/lib/releases";
 import { CopyLinkNote } from "./CopyLinkNote";
 import { DownloadButton } from "./DownloadButton";
 import { PlatformPicker } from "./PlatformPicker";
-import styles from "./download.module.css";
 
 export function DownloadPanel({ options }: { options: DownloadOption[] }) {
   const detected = useDetectedPlatform();
@@ -21,14 +20,14 @@ export function DownloadPanel({ options }: { options: DownloadOption[] }) {
   const installSteps = platforms.find((p) => p.id === selected.platformId)?.installSteps ?? [];
 
   return (
-    <div className={styles.dl}>
+    <div className="mt-9 w-full max-w-110">
       <PlatformPicker
         choices={options.map((o) => ({ id: o.platformId, label: o.label }))}
         selected={selected.platformId}
         recommended={detectedOption?.platformId ?? null}
         onSelect={setOverride}
       />
-      <div className={styles.slot} aria-live="polite">
+      <div className="mt-3.5 min-h-37.5" aria-live="polite">
         <DownloadButton
           key={selected.platformId}
           option={selected}

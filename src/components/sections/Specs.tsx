@@ -1,5 +1,3 @@
-import styles from "./sections.module.css";
-
 const specs = [
   { term: "Requires", value: "macOS 14 Sonoma+" },
   { term: "Architecture", value: "Universal (Apple silicon, Intel)" },
@@ -9,11 +7,13 @@ const specs = [
 
 export function Specs() {
   return (
-    <dl className={styles.specs}>
+    <dl className="grid grid-cols-2 gap-6 border-t border-border pt-7 pb-14 lg:grid-cols-4">
       {specs.map((s) => (
         <div key={s.term}>
-          <dt>{s.term}</dt>
-          <dd>{s.value}</dd>
+          <dt className="font-mono text-2xs leading-none font-medium tracking-[0.08em] text-fg-subtle uppercase">
+            {s.term}
+          </dt>
+          <dd className="mt-2 text-sm">{s.value}</dd>
         </div>
       ))}
     </dl>

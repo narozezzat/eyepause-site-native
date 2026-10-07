@@ -1,27 +1,48 @@
 "use client";
 
 import { useCountdown } from "@/hooks/useCountdown";
-import styles from "./tour.module.css";
+import { cn } from "@/lib/cn";
 
 /* Mock-ups of the real app's screens for the tour. All decorative: each is a single role="img". */
+
+/** Desktop backdrop for the break card and heads-up toast. */
+const screen =
+  "relative grid min-h-85 place-items-center overflow-hidden rounded-xl border border-border bg-surface-2 p-4 sm:p-5.5";
+/** A macOS window. */
+const win = "overflow-hidden rounded-xl border border-border bg-surface text-ui shadow-elev";
+const chip =
+  "inline-block flex-none rounded-md bg-accent-soft px-2 py-1.25 font-mono text-3xs leading-none font-medium tracking-[0.1em] text-accent";
+const optRow = "flex items-center justify-between gap-3 border-b border-border py-2.25";
+const optDetail = "block text-2xs text-fg-subtle";
+const mockButton = "rounded-lg p-2 text-xs font-medium";
+
+function TitleBar({ title }: { title: string }) {
+  return (
+    <div className="flex h-8.5 items-center gap-1.75 border-b border-border bg-bg px-3">
+      <i className="size-2.75 rounded-full bg-tl-red" />
+      <i className="size-2.75 rounded-full bg-tl-yellow" />
+      <i className="size-2.75 rounded-full bg-tl-green" />
+      <span className="mx-auto -translate-x-5 truncate text-xs font-semibold text-fg-muted">{title}</span>
+    </div>
+  );
+}
 
 const BREAK_RING = 326.7;
 
 export function BreakScreen({ active }: { active: boolean }) {
   const [b, ref] = useCountdown<HTMLDivElement>(20, 20, active);
   return (
-    <div ref={ref} className={styles.screen} role="img" aria-label="Floating break card counting down 20 seconds">
-      <div className={styles.card}>
-        <span className={styles.chip}>MICRO BREAK</span>
-        <div className={styles.bring}>
-          <svg viewBox="0 0 120 120" fill="none">
-            <circle cx="60" cy="60" r="52" stroke="var(--line)" strokeWidth="5" />
+    <div ref={ref} className={screen} role="img" aria-label="Floating break card counting down 20 seconds">
+      <div className="w-full max-w-95 rounded-2xl border border-border bg-surface p-5 text-center shadow-elev sm:p-6">
+        <span className={chip}>MICRO BREAK</span>
+        <div className="relative mx-auto my-4 grid size-30 place-items-center">
+          <svg className="absolute inset-0" viewBox="0 0 120 120" fill="none">
+            <circle className="stroke-border" cx="60" cy="60" r="52" strokeWidth="5" />
             <circle
-              className={styles.bringProgress}
+              className="stroke-accent transition-[stroke-dashoffset] duration-1000 ease-linear"
               cx="60"
               cy="60"
               r="52"
-              stroke="var(--accent)"
               strokeWidth="5"
               strokeLinecap="round"
               strokeDasharray={BREAK_RING}
@@ -29,17 +50,19 @@ export function BreakScreen({ active }: { active: boolean }) {
               transform="rotate(-90 60 60)"
             />
           </svg>
-          <b>00:{String(b).padStart(2, "0")}</b>
+          <b className="relative font-mono text-3xl leading-none font-medium tabular-nums">
+            00:{String(b).padStart(2, "0")}
+          </b>
         </div>
-        <h4>Look away from your screen</h4>
-        <p>Focus on an object at least 20 feet (6m) away.</p>
-        <p>Blink slowly to lubricate your eyes.</p>
-        <div className={styles.acts}>
-          <span>Skip</span>
-          <span>Snooze</span>
-          <span className={styles.done}>I&apos;m Done</span>
+        <h4 className="mb-1 text-lede font-semibold">Look away from your screen</h4>
+        <p className="mb-1 text-ui text-fg-muted">Focus on an object at least 20 feet (6m) away.</p>
+        <p className="mb-1 text-ui text-fg-muted">Blink slowly to lubricate your eyes.</p>
+        <div className="mt-4 grid grid-cols-1 gap-1.5 sm:grid-cols-[1fr_1fr_1.3fr]">
+          <span className={cn(mockButton, "bg-surface-2")}>Skip</span>
+          <span className={cn(mockButton, "bg-surface-2")}>Snooze</span>
+          <span className={cn(mockButton, "bg-accent text-accent-fg")}>I&apos;m Done</span>
         </div>
-        <div className={styles.hint}>Exit Break (Esc)</div>
+        <div className="mt-2.5 font-mono text-2xs text-fg-subtle">Exit Break (Esc)</div>
       </div>
     </div>
   );
@@ -48,19 +71,19 @@ export function BreakScreen({ active }: { active: boolean }) {
 export function HeadsUpScreen() {
   return (
     <div
-      className={styles.screen}
+      className={screen}
       role="img"
       aria-label="Heads-up toast under the menu bar: break in 30 seconds, Postpone 5 min"
     >
-      <div className={styles.mbar} />
-      <div className={styles.toast}>
-        <svg viewBox="0 0 30 30" fill="none">
-          <circle cx="15" cy="15" r="12" stroke="var(--line)" strokeWidth="3" />
+      <div className="absolute inset-x-0 top-0 h-6.5 border-b border-border bg-menu-bar" />
+      <div className="absolute top-6.5 left-1/2 flex w-[min(92%,340px)] -translate-x-1/2 items-center gap-3 rounded-b-card border border-t-0 border-border bg-surface px-3.5 py-3 text-left shadow-elev">
+        <svg className="size-7.5 flex-none" viewBox="0 0 30 30" fill="none">
+          <circle className="stroke-border" cx="15" cy="15" r="12" strokeWidth="3" />
           <circle
+            className="stroke-accent"
             cx="15"
             cy="15"
             r="12"
-            stroke="var(--accent)"
             strokeWidth="3"
             strokeLinecap="round"
             strokeDasharray="75.4"
@@ -68,15 +91,17 @@ export function HeadsUpScreen() {
             transform="rotate(-90 15 15)"
           />
         </svg>
-        <span>
-          <b>Break in 30s</b>
-          <small>Micro break · 20 sec</small>
+        <span className="min-w-0">
+          <b className="block text-ui">Break in 30s</b>
+          <small className="text-2xs text-fg-subtle">Micro break · 20 sec</small>
         </span>
-        <em>Postpone 5 min</em>
+        <em className="ml-auto rounded-[7px] bg-surface-2 px-2.25 py-1.5 text-xs font-medium whitespace-nowrap not-italic">
+          Postpone 5 min
+        </em>
       </div>
-      <div className={styles.ghost}>
+      <div className="grid w-[70%] gap-2.5 opacity-50">
         {[80, 100, 60, 90, 40].map((w, i) => (
-          <i key={i} style={{ width: `${w}%` }} />
+          <i key={i} className="h-2.5 rounded-[5px] bg-border" style={{ width: `${w}%` }} />
         ))}
       </div>
     </div>
@@ -97,67 +122,61 @@ const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 /** 26 weeks × 7 days of activity levels (0–3), column-major like the app's heatmap. */
 const heat =
   "11032210002213301221131301103331311111333331032132211121033231012313321222122111133000231223231131021332111232132110303113223101112001301331011113323323301212111221120102113311000000";
-const heatClass = ["", styles.l1, styles.l2, styles.l3];
+const heatClass = ["bg-border", "bg-heat-1", "bg-heat-2", "bg-accent"];
+const completed = "bg-accent";
+const skipped = "bg-fg-subtle/45";
+
+const stats = [
+  ["18", "Breaks Completed"],
+  ["2", "Breaks Skipped"],
+  ["90%", "Completion Rate"],
+  ["6h 40m", "Screen Time"],
+];
 
 export function StatisticsScreen() {
   return (
     <div
-      className={styles.win}
+      className={win}
       role="img"
       aria-label="EyePause Statistics window: 18 breaks completed, 2 skipped, 90 percent completion, weekly chart and yearly heatmap"
     >
-      <div className={styles.tb}>
-        <i />
-        <i />
-        <i />
-        <span>EyePause Statistics</span>
-      </div>
-      <div className={styles.wb}>
-        <div className={styles.sgrid}>
-          <div className={styles.sc}>
-            <b>18</b>
-            <span>Breaks Completed</span>
-          </div>
-          <div className={styles.sc}>
-            <b>2</b>
-            <span>Breaks Skipped</span>
-          </div>
-          <div className={styles.sc}>
-            <b>90%</b>
-            <span>Completion Rate</span>
-          </div>
-          <div className={styles.sc}>
-            <b>6h 40m</b>
-            <span>Screen Time</span>
-          </div>
-        </div>
-        <div className={styles.chart}>
-          {week.map(([h, c, k], i) => (
-            <div key={days[i]} style={{ height: `${h}%` }}>
-              <span className={styles.c} style={{ flex: c }} />
-              <span className={styles.k} style={{ flex: k }} />
+      <TitleBar title="EyePause Statistics" />
+      <div className="p-4 sm:p-4.5">
+        <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+          {stats.map(([value, label]) => (
+            <div key={label} className="rounded-control border border-border px-3 py-2.5">
+              <b className="block font-mono text-lg leading-tight font-medium tabular-nums">{value}</b>
+              <span className="text-2xs text-fg-subtle">{label}</span>
             </div>
           ))}
         </div>
-        <div className={styles.cl}>
+        <div className="mt-4 mb-1 grid h-27.5 grid-cols-7 items-end gap-2">
+          {week.map(([h, c, k], i) => (
+            <div key={days[i]} className="flex flex-col-reverse overflow-hidden rounded-sm" style={{ height: `${h}%` }}>
+              <span className={completed} style={{ flex: c }} />
+              <span className={skipped} style={{ flex: k }} />
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-7 gap-2 text-center font-mono text-3xs font-medium text-fg-subtle">
           {days.map((d) => (
             <span key={d}>{d}</span>
           ))}
         </div>
-        <div className={styles.legend}>
+        <div className="mt-2.5 flex flex-wrap gap-x-3.5 gap-y-1 text-2xs text-fg-subtle">
           <span>
-            <i className={styles.c} />
+            <i className={cn("mr-1.25 inline-block size-2 rounded-xs", completed)} />
             Completed
           </span>
           <span>
-            <i className={styles.k} />
+            <i className={cn("mr-1.25 inline-block size-2 rounded-xs", skipped)} />
             Skipped
           </span>
-          <span className={styles.streak}>Current Streak · 12 days</span>
+          <span className="ml-auto">Current Streak · 12 days</span>
         </div>
-        <div className={styles.heat}>
+        <div className="mt-3.5 grid grid-flow-col grid-cols-[repeat(26,minmax(0,1fr))] grid-rows-7 gap-0.5">
           {Array.from(heat, (level, i) => (
-            <i key={i} className={heatClass[Number(level)]} />
+            <i key={i} className={cn("aspect-square rounded-xs", heatClass[Number(level)])} />
           ))}
         </div>
       </div>
@@ -180,38 +199,52 @@ const toggles = [
 
 export function SettingsScreen() {
   return (
-    <div className={styles.win} role="img" aria-label="Settings window, Schedule tab, with presets and toggles">
-      <div className={styles.tb}>
-        <i />
-        <i />
-        <i />
-        <span>Settings</span>
-      </div>
-      <div className={styles.set}>
-        <div className={styles.side}>
+    <div className={win} role="img" aria-label="Settings window, Schedule tab, with presets and toggles">
+      <TitleBar title="Settings" />
+      <div className="grid min-h-80 grid-cols-1 sm:grid-cols-[130px_1fr]">
+        <div className="hidden content-start gap-0.5 border-r border-border px-2 py-2.5 sm:grid">
           {["General", "Schedule", "Behavior", "Appearance", "Audio", "About"].map((s) => (
-            <span key={s} className={s === "Schedule" ? styles.on : undefined}>
+            <span
+              key={s}
+              className={cn(
+                "rounded-md px-2.25 py-1.5",
+                s === "Schedule" ? "bg-accent-soft font-medium text-accent" : "text-fg-muted",
+              )}
+            >
               {s}
             </span>
           ))}
         </div>
-        <div className={styles.pane}>
-          <h5>Preset</h5>
-          <div className={styles.presets}>
+        <div className="grid content-start gap-1 px-4 py-4 sm:px-4.5">
+          <h5 className="mb-1.5 font-mono text-2xs leading-none font-medium tracking-[0.08em] text-fg-subtle uppercase">
+            Preset
+          </h5>
+          <div className="mb-2 grid grid-cols-1 gap-1.5 sm:grid-cols-3">
             {presets.map((p) => (
-              <div key={p.name} className={p.on ? styles.on : undefined}>
-                <b>{p.name}</b>
+              <div
+                key={p.name}
+                className={cn(
+                  "rounded-lg border p-2 text-xs",
+                  p.on ? "border-accent shadow-[inset_0_0_0_1px_var(--color-accent)]" : "border-border",
+                )}
+              >
+                <b className="block">{p.name}</b>
                 {p.detail}
               </div>
             ))}
           </div>
           {toggles.map((t) => (
-            <div key={t.label} className={styles.optRow}>
+            <div key={t.label} className={optRow}>
               <span>
                 {t.label}
-                {t.detail && <small>{t.detail}</small>}
+                {t.detail && <small className={optDetail}>{t.detail}</small>}
               </span>
-              <i className={t.on ? `${styles.sw} ${styles.swOn}` : styles.sw} />
+              <i
+                className={cn(
+                  "relative h-4.5 w-7.5 flex-none rounded-full after:absolute after:top-0.5 after:size-3.5 after:rounded-full after:bg-knob after:shadow-knob after:content-['']",
+                  t.on ? "bg-accent after:left-3.5" : "bg-border after:left-0.5",
+                )}
+              />
             </div>
           ))}
         </div>
@@ -230,21 +263,16 @@ const statuses = [
 
 export function SmartPauseScreen() {
   return (
-    <div className={styles.win} role="img" aria-label="Popover status chips: Idle, Locked, Waiting on a call, Off Hours">
-      <div className={styles.tb}>
-        <i />
-        <i />
-        <i />
-        <span>Status</span>
-      </div>
-      <div className={`${styles.wb} ${styles.statusList}`}>
+    <div className={win} role="img" aria-label="Popover status chips: Idle, Locked, Waiting on a call, Off Hours">
+      <TitleBar title="Status" />
+      <div className="grid gap-2 p-4 sm:p-4.5">
         {statuses.map((s) => (
-          <div key={s.title} className={styles.optRow}>
-            <span>
+          <div key={s.title} className={cn(optRow, "last:border-b-0")}>
+            <span className="min-w-0">
               <b>{s.title}</b>
-              <small>{s.detail}</small>
+              <small className={optDetail}>{s.detail}</small>
             </span>
-            <span className={styles.chip}>{s.chip}</span>
+            <span className={chip}>{s.chip}</span>
           </div>
         ))}
       </div>

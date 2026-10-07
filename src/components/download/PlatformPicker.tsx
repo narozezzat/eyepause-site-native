@@ -2,7 +2,7 @@
 
 import { useRef, type KeyboardEvent } from "react";
 import { PlatformIcon } from "./PlatformIcon";
-import styles from "./download.module.css";
+import { cn } from "@/lib/cn";
 
 interface PlatformChoice {
   id: string;
@@ -43,7 +43,12 @@ export function PlatformPicker({ choices, selected, recommended, onSelect }: Pla
   }
 
   return (
-    <div className={styles.seg} role="radiogroup" aria-label="Platform" onKeyDown={onKeyDown}>
+    <div
+      className="flex gap-0.5 rounded-control bg-surface-2 p-[3px]"
+      role="radiogroup"
+      aria-label="Platform"
+      onKeyDown={onKeyDown}
+    >
       {choices.map((c) => {
         const checked = c.id === selected;
         const isRecommended = c.id === recommended;
@@ -58,13 +63,21 @@ export function PlatformPicker({ choices, selected, recommended, onSelect }: Pla
             aria-checked={checked}
             tabIndex={checked ? 0 : -1}
             aria-label={isRecommended ? `${c.label}, recommended for this device` : undefined}
+            className={cn(
+              "flex min-h-11 flex-[1_0_auto] cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-ui font-medium whitespace-nowrap transition-[background-color,color,box-shadow] hover:text-fg focus-visible:outline-offset-[-1px] sm:gap-2",
+              checked ? "bg-surface text-fg shadow-seg" : "text-fg-muted",
+            )}
             onClick={() => onSelect(c.id)}
           >
-            <PlatformIcon platformId={c.id} />
+            <PlatformIcon className="size-[15px] flex-none" platformId={c.id} />
             {c.label}
             {isRecommended && (
-              <span className={styles.rec} aria-hidden="true">
-                <span className={styles.recText}>Recommended</span>
+              // Below sm the badge collapses to an accent dot; the radio's aria-label still says "recommended".
+              <span
+                className="inline-flex size-1.5 items-center rounded-full bg-accent font-mono text-3xs font-medium tracking-[0.06em] text-accent uppercase sm:size-auto sm:rounded-[5px] sm:bg-accent-soft sm:px-[5px] sm:py-[3px]"
+                aria-hidden="true"
+              >
+                <span className="hidden sm:inline">Recommended</span>
               </span>
             )}
           </button>

@@ -10,7 +10,7 @@ export default async function Home() {
   const options = await getDownloads();
 
   return (
-    <div className="wrap">
+    <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
       <Header />
       <main id="main" tabIndex={-1}>
         <Hero options={options} />

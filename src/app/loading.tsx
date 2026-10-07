@@ -1,13 +1,12 @@
 import { BrandMark } from "@/components/brand/BrandMark";
-import styles from "@/components/brand/brand.module.css";
 
 export default function Loading() {
   return (
-    <div className={styles.loading} role="status">
-      <span className={styles.pulse}>
+    <div className="grid min-h-[60vh] place-items-center" role="status">
+      <span className="animate-pulse-soft">
         <BrandMark size="large" />
       </span>
-      <span className="visually-hidden">Loading EyePause</span>
+      <span className="sr-only">Loading EyePause</span>
     </div>
   );
 }

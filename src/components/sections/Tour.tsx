@@ -2,7 +2,7 @@
 
 import { useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { BreakScreen, HeadsUpScreen, SettingsScreen, SmartPauseScreen, StatisticsScreen } from "./TourScreens";
-import styles from "./tour.module.css";
+import { cn } from "@/lib/cn";
 
 interface TourTab {
   id: string;
@@ -94,10 +94,17 @@ export function Tour() {
   }
 
   return (
-    <section className={styles.tour} id="tour" aria-labelledby="tour-h">
-      <h2 id="tour-h">Take the tour</h2>
-      <p className={styles.intro}>Five places you&apos;ll meet EyePause. Drawn from the real app, at real copy.</p>
-      <div className={styles.tabs} role="tablist" aria-label="App screens" onKeyDown={onKeyDown}>
+    <section className="border-t border-border py-16 sm:py-20 lg:py-28" id="tour" aria-labelledby="tour-h">
+      <h2 id="tour-h" className="mb-2 text-title font-semibold tracking-[-0.03em]">
+        Take the tour
+      </h2>
+      <p className="mb-7 max-w-[56ch] text-fg-muted">Five places you&apos;ll meet EyePause. Drawn from the real app, at real copy.</p>
+      <div
+        className="inline-flex max-w-full flex-wrap gap-0.5 rounded-control bg-surface-2 p-[3px]"
+        role="tablist"
+        aria-label="App screens"
+        onKeyDown={onKeyDown}
+      >
         {tabs.map((t, i) => (
           <button
             key={t.id}
@@ -110,6 +117,10 @@ export function Tour() {
             aria-controls={`p-${t.id}`}
             aria-selected={i === selected}
             tabIndex={i === selected ? 0 : -1}
+            className={cn(
+              "inline-flex min-h-11 cursor-pointer items-center rounded-lg px-3 text-ui font-medium transition-[background-color,color,box-shadow] hover:text-fg focus-visible:outline-offset-[-1px]",
+              i === selected ? "bg-surface text-fg shadow-seg" : "text-fg-muted",
+            )}
             onClick={() => select(i)}
           >
             {t.label}
@@ -119,7 +130,7 @@ export function Tour() {
       {tabs.map((t, i) => (
         <div
           key={t.id}
-          className={styles.stage}
+          className="mt-6 grid grid-cols-1 items-center gap-5 rounded-xl focus-visible:outline-offset-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-10"
           role="tabpanel"
           id={`p-${t.id}`}
           aria-labelledby={`t-${t.id}`}
@@ -127,12 +138,17 @@ export function Tour() {
           hidden={i !== selected}
         >
           {t.screen(i === selected)}
-          <div className={styles.cap}>
-            <h3>{t.title}</h3>
-            <p>{t.body}</p>
-            <ul>
+          <div className="-order-1 lg:order-none">
+            <h3 className="mb-2 text-xl leading-tight font-semibold tracking-[-0.015em]">{t.title}</h3>
+            <p className="mb-3 text-fg-muted">{t.body}</p>
+            <ul className="grid gap-1.75 text-sm text-fg-muted">
               {t.points.map((p) => (
-                <li key={p}>{p}</li>
+                <li
+                  key={p}
+                  className="flex gap-2.25 before:mt-2.25 before:size-1.25 before:flex-none before:rounded-full before:bg-accent before:content-['']"
+                >
+                  {p}
+                </li>
               ))}
             </ul>
           </div>
