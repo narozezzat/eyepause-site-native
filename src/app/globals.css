@@ -24,8 +24,14 @@
   --knob: #ffffff;
 }
 
+/* An explicit choice from the theme toggle (data-theme, set before first paint)
+   overrides the OS setting; with no choice the OS decides. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #0b0d10;
     --desk: #14181d;
     --surface: #1a1e24;
@@ -42,6 +48,33 @@
     --danger-soft: #3a1714;
     --shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -10px rgba(0, 0, 0, 0.7);
   }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b0d10;
+  --desk: #14181d;
+  --surface: #1a1e24;
+  --ink: #f1f4f7;
+  --ink-2: #a8b2bc;
+  --ink-3: #6e7a86;
+  --line: #262c33;
+  --accent: #2fd3a0;
+  --accent-soft: #11302a;
+  --accent-ink: #04211a;
+  --bar: rgba(30, 34, 40, 0.86);
+  --focus: #3b9bff;
+  --danger: #ff8a80;
+  --danger-soft: #3a1714;
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -10px rgba(0, 0, 0, 0.7);
+}
+
+/* Set for one frame while the theme switches, so surfaces swap together. */
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
 }
 
 *,

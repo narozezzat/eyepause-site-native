@@ -16,6 +16,12 @@
   text-decoration: none;
 }
 
+.end {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .nav {
   display: flex;
   gap: 6px;
@@ -34,6 +40,31 @@
 }
 
 .nav a:hover {
+  background: var(--desk);
+  color: var(--ink);
+}
+
+.theme {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.theme svg {
+  width: 18px;
+  height: 18px;
+}
+
+.theme:hover {
   background: var(--desk);
   color: var(--ink);
 }

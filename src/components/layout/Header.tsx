@@ -1,4 +1,5 @@
 import { BrandMark } from "@/components/brand/BrandMark";
+import { ThemeToggle } from "./ThemeToggle";
 import styles from "./layout.module.css";
 
 const links = [
@@ -14,13 +15,16 @@ export function Header({ home = "#" }: { home?: string }) {
         <BrandMark />
         <span aria-hidden="true">EyePause</span>
       </a>
-      <nav aria-label="Primary" className={styles.nav}>
-        {links.map((l) => (
-          <a key={l.href} href={home === "#" ? l.href : `${home}${l.href}`}>
-            {l.label}
-          </a>
-        ))}
-      </nav>
+      <div className={styles.end}>
+        <nav aria-label="Primary" className={styles.nav}>
+          {links.map((l) => (
+            <a key={l.href} href={home === "#" ? l.href : `${home}${l.href}`}>
+              {l.label}
+            </a>
+          ))}
+        </nav>
+        <ThemeToggle />
+      </div>
     </header>
   );
 }
