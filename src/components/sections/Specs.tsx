@@ -84,7 +84,8 @@ export function Specs() {
       <div className="section-copy">
         <h2>
           Small breaks.
-          <br />A habit you can see.
+          <br />
+          <span className="accent-line">A habit you can see.</span>
         </h2>
         <p>
           See the breaks you’ve taken today and across the week. A simple record

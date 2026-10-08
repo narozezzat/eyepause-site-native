@@ -8,7 +8,7 @@ export function Tour() {
           <br />
           There’s a world
           <br />
-          out there.
+          <span className="accent-line">out there.</span>
         </h2>
         <p>
           When it’s time, a full-screen reminder gives your eyes a moment away
