@@ -127,6 +127,8 @@
     --border-strong: #b8c1c7;
     --accent: #0fcc94;
     --accent-text: #007652;
+    --scrollbar-thumb: color-mix(in oklab, var(--fg) 22%, transparent);
+    --scrollbar-thumb-hover: color-mix(in oklab, var(--accent-text) 75%, transparent);
     --accent-fg: #06392b;
     --accent-soft: #ddf7ed;
     --focus: #007652;
@@ -170,6 +172,8 @@
       --border: #30383f;
       --border-strong: #47545f;
       --accent-text: #39dbac;
+      --scrollbar-thumb: color-mix(in oklab, var(--fg) 18%, transparent);
+      --scrollbar-thumb-hover: color-mix(in oklab, var(--accent-text) 60%, transparent);
       --accent-soft: #163e32;
       --focus: #39dbac;
       --danger: #ff9999;
@@ -193,6 +197,8 @@
     --border: #30383f;
     --border-strong: #47545f;
     --accent-text: #39dbac;
+    --scrollbar-thumb: color-mix(in oklab, var(--fg) 18%, transparent);
+    --scrollbar-thumb-hover: color-mix(in oklab, var(--accent-text) 60%, transparent);
     --accent-soft: #163e32;
     --focus: #39dbac;
     --danger: #ff9999;
@@ -207,6 +213,48 @@
   }
   * {
     box-sizing: border-box;
+  }
+  html {
+    scrollbar-gutter: stable;
+  }
+  :is(html, [data-slot="dropdown-menu-content"], .overflow-auto, .overflow-x-auto, .overflow-y-auto) {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+  }
+  @media (hover: hover) {
+    :is([data-slot="dropdown-menu-content"], .overflow-auto, .overflow-x-auto, .overflow-y-auto):hover {
+      scrollbar-color: var(--scrollbar-thumb-hover) transparent;
+    }
+  }
+  @supports not (scrollbar-color: auto) {
+    @media (forced-colors: none) {
+      :is(html, [data-slot="dropdown-menu-content"], .overflow-auto, .overflow-x-auto, .overflow-y-auto)::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+      }
+      :is(html, [data-slot="dropdown-menu-content"], .overflow-auto, .overflow-x-auto, .overflow-y-auto)::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      :is(html, [data-slot="dropdown-menu-content"], .overflow-auto, .overflow-x-auto, .overflow-y-auto)::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb);
+        border: 3px solid transparent;
+        border-radius: 999px;
+        background-clip: padding-box;
+      }
+      :is(html, [data-slot="dropdown-menu-content"], .overflow-auto, .overflow-x-auto, .overflow-y-auto)::-webkit-scrollbar-thumb:hover,
+      :is(html, [data-slot="dropdown-menu-content"], .overflow-auto, .overflow-x-auto, .overflow-y-auto)::-webkit-scrollbar-thumb:active {
+        background-color: var(--scrollbar-thumb-hover);
+      }
+      :is(html, [data-slot="dropdown-menu-content"], .overflow-auto, .overflow-x-auto, .overflow-y-auto)::-webkit-scrollbar-corner {
+        display: none;
+      }
+    }
+  }
+  @media (forced-colors: active) {
+    :is(html, [data-slot="dropdown-menu-content"], .overflow-auto, .overflow-x-auto, .overflow-y-auto) {
+      scrollbar-width: auto;
+      scrollbar-color: auto;
+    }
   }
   html {
     scroll-behavior: smooth;
@@ -1736,4 +1784,25 @@ html[data-scrolled] .header {
 }
 #timer[data-paused] {
   opacity: .45;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }

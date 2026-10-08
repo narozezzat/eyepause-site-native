@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { heroTimer } from "@/hooks/useDemoTimer";
@@ -108,6 +109,67 @@ export function MotionRuntime() {
 
     const mm = gsap.matchMedia();
     mm.add("(prefers-reduced-motion: no-preference)", () => {
+      const lenis = new Lenis({
+        duration: 1.05,
+        smoothWheel: true,
+        syncTouch: false,
+        autoRaf: false,
+      });
+      const tick = (time: number) => lenis.raf(time * 1000);
+      gsap.ticker.add(tick);
+      gsap.ticker.lagSmoothing(0);
+      lenis.on("scroll", ScrollTrigger.update);
+
+      const onAnchorClick = (event: MouseEvent) => {
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey ||
+          !(event.target instanceof Element)
+        )
+          return;
+        const anchor = event.target.closest<HTMLAnchorElement>('a[href*="#"]');
+        if (
+          !anchor ||
+          anchor.hasAttribute("download") ||
+          (anchor.target && anchor.target !== "_self")
+        )
+          return;
+
+        let url: URL;
+        let id: string;
+        try {
+          url = new URL(anchor.href, window.location.href);
+          id = decodeURIComponent(url.hash.slice(1));
+        } catch {
+          return;
+        }
+        if (
+          url.origin !== window.location.origin ||
+          url.pathname !== window.location.pathname ||
+          url.search !== window.location.search ||
+          !id
+        )
+          return;
+        const target = document.getElementById(id);
+        if (!target) return;
+
+        event.preventDefault();
+        // Measure from the live scroll position: Lenis's own copy can lag behind
+        // a restored or native scroll. scroll-padding-top clears the sticky header.
+        const pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
+        lenis.scrollTo(target.getBoundingClientRect().top + window.scrollY - pad);
+        if (window.location.hash !== url.hash)
+          window.history.pushState(null, "", url.hash);
+        if (target.tabIndex < 0 && !target.hasAttribute("tabindex"))
+          target.setAttribute("tabindex", "-1");
+        target.focus({ preventScroll: true });
+      };
+      document.addEventListener("click", onAnchorClick);
+
       let glide: gsap.core.Tween | undefined;
       heroTimer.setGlide((from, to, paint, done, options) => {
         const proxy = { v: from };
@@ -125,6 +187,11 @@ export function MotionRuntime() {
       });
       const stopFlips = choreograph();
       return () => {
+        document.removeEventListener("click", onAnchorClick);
+        gsap.ticker.remove(tick);
+        lenis.destroy();
+        // Restore GSAP's defaults; this runtime owns the ticker configuration.
+        gsap.ticker.lagSmoothing(500, 33);
         stopFlips();
         glide?.kill();
         heroTimer.setGlide(null);
