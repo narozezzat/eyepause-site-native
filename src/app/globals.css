@@ -505,10 +505,10 @@
   .desktop-word {
     position: absolute;
     left: 52px;
-    top: 122px;
+    top: 114px;
     white-space: nowrap;
     /* Scales with the scene so it never runs under the popover. */
-    font-size: clamp(40px, 6cqi, 68px);
+    font-size: clamp(36px, 5.4cqi, 60px);
     letter-spacing: -0.05em;
     line-height: 1.06;
     font-weight: 450;
@@ -540,7 +540,7 @@
     width: 18px;
     height: 18px;
   }
-  @container (max-width: 760px) {
+  @container (max-width: 620px) {
     .desktop-word {
       display: none;
     }

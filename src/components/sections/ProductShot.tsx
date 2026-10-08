@@ -51,7 +51,9 @@ export function ProductShot() {
           <br />
           with a little
           <br />
-          breathing room.
+          breathing
+          <br />
+          room.
         </div>
         <div className="desk-bottom">
           <span className="desk-bottom-icon" aria-hidden="true">
