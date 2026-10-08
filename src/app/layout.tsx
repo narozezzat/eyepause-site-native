@@ -34,6 +34,12 @@ export const viewport: Viewport = {
   ],
 };
 
+/**
+ * Hides the hero until its intro starts, so it never flashes in its final
+ * state first. Skipped under reduced motion; un-hides after 3s if scripts fail.
+ */
+const motionBoot = `(function(){var r=document.documentElement;if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;r.dataset.motion="pending";setTimeout(function(){if(r.dataset.motion==="pending")r.dataset.motion="off"},3000)})()`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -41,6 +47,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geist.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: motionBoot }} />
+      </head>
       <body>
         {/* The route streams behind a Suspense boundary; without JS, reveal it and drop the loading fallback.
             The theme layer is used because Tailwind's preflight hides [hidden] with !important in base. */}

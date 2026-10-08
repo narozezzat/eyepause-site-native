@@ -8,7 +8,7 @@ import { EYE_PATH } from "./EyeGlyph";
 export function Splash() {
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-10 grid animate-splash-out place-items-center bg-bg motion-reduce:hidden"
+      className="pointer-events-none fixed inset-0 z-30 grid animate-splash-out place-items-center bg-bg motion-reduce:hidden"
       aria-hidden="true"
     >
       <svg

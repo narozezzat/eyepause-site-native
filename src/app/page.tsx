@@ -1,4 +1,5 @@
 import { Footer } from "@/components/layout/Footer";
+import { MotionRuntime } from "@/components/motion/MotionRuntime";
 import { Header } from "@/components/layout/Header";
 import { Features } from "@/components/sections/Features";
 import { Hero } from "@/components/sections/Hero";
@@ -23,6 +24,9 @@ export default function Home() {
         </div>
       </main>
       <Footer />
+      {/* Lives with the page, not the layout, so it runs after the page (behind
+          loading.tsx) has hydrated and never rewrites text React still owns. */}
+      <MotionRuntime />
     </>
   );
 }

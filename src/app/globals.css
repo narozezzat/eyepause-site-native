@@ -150,6 +150,7 @@
     --ov-accent-fg: #06392b;
     --ov-tile: #25302b;
     --float: 0 20px 48px -16px #101c2838, 0 2px 5px #101c2810;
+    --shadow-header: 0 10px 28px -16px #101c2838;
     --radius-control: .625rem;
     --radius-card: .875rem;
     --radius-window: 1.125rem;
@@ -178,6 +179,7 @@
       --desk: #171e23;
       --desk-line: #303b43;
       --float: 0 20px 48px -16px #00000080, 0 2px 5px #00000030;
+      --shadow-header: 0 12px 30px -14px #000000b3;
       color-scheme: dark;
     }
   }
@@ -200,6 +202,7 @@
     --desk: #171e23;
     --desk-line: #303b43;
     --float: 0 20px 48px -16px #00000080, 0 2px 5px #00000030;
+    --shadow-header: 0 12px 30px -14px #000000b3;
     color-scheme: dark;
   }
   * {
@@ -1716,4 +1719,21 @@
   .theme-trigger {
     transition: none;
   }
+}
+
+/* GSAP motion: the hero waits for its intro; the header lifts once the page scrolls. */
+html[data-motion="pending"] :is(.hero-intro, .hero > figure) {
+  visibility: hidden;
+}
+.header {
+  transition: box-shadow .5s var(--ease-out);
+}
+html[data-scrolled] .header {
+  box-shadow: var(--shadow-header);
+}
+#timer {
+  transition: opacity .5s var(--ease-out);
+}
+#timer[data-paused] {
+  opacity: .45;
 }

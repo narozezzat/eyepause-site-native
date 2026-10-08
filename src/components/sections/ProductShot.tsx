@@ -1,9 +1,13 @@
 "use client";
-import { useState } from "react";
+import { heroTimer, useDemoTimer } from "@/hooks/useDemoTimer";
+import { cycleFraction, formatClock } from "@/lib/preview";
+
+/** 2π × 74, as the popover ring is drawn. */
+const RING = 465;
+
 export function ProductShot() {
-  const [paused, setPaused] = useState(false);
-  const [reset, setReset] = useState(false);
-  const time = reset ? "20:00" : "18:42";
+  const { left, paused, skipped } = useDemoTimer(heroTimer);
+  const time = formatClock(left);
   return (
     <figure>
       <div
@@ -80,7 +84,11 @@ export function ProductShot() {
               <circle className="track" cx="80" cy="80" r="74" />
               <circle
                 className="progress"
-                style={{ strokeDashoffset: reset ? 0 : 95 }}
+                style={{
+                  strokeDashoffset: Math.round(
+                    RING * (1 - cycleFraction(left, heroTimer.cycle)),
+                  ),
+                }}
                 cx="80"
                 cy="80"
                 r="74"
@@ -91,7 +99,9 @@ export function ProductShot() {
               role="timer"
               aria-label={`${time} until your next break`}
             >
-              <strong id="timer">{time}</strong>
+              <strong id="timer" data-paused={paused || undefined}>
+                {time}
+              </strong>
               <span>until your next break</span>
             </div>
           </div>
@@ -99,14 +109,14 @@ export function ProductShot() {
             <button
               id="pause-btn"
               aria-pressed={paused}
-              onClick={() => setPaused(!paused)}
+              onClick={heroTimer.togglePause}
             >
               <svg aria-hidden="true">
                 <use href="#pause" />
               </svg>
               <span>{paused ? "Resume" : "Pause"}</span>
             </button>
-            <button id="skip-btn" onClick={() => setReset(true)}>
+            <button id="skip-btn" onClick={heroTimer.skip}>
               <svg aria-hidden="true">
                 <use href="#skip" />
               </svg>
@@ -115,7 +125,7 @@ export function ProductShot() {
           </div>
           <div className="pop-footer">
             <span id="today-count" role="status">
-              {reset
+              {skipped
                 ? "Next break reset to 20 minutes"
                 : "Sample · 6 breaks taken today"}
             </span>
