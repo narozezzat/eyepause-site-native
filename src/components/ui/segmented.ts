@@ -1,4 +1,4 @@
-import { cn } from "@/lib/cn";
+import { cn } from "@/lib/utils";
 
 /** macOS-style segmented control, shared by the theme toggle, platform picker and tour tabs. */
 export const segGroup = "rounded-control bg-surface-2 p-0.5";

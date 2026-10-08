@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { EyeGlyph } from "@/components/brand/EyeGlyph";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { withBasePath } from "@/config/site";
 
 export const metadata: Metadata = {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCountdown } from "@/hooks/useCountdown";
-import { cn } from "@/lib/cn";
+import { cn } from "@/lib/utils";
 
 /* Mock-ups of the real app's screens for the tour. All decorative: each is a single role="img". */
 

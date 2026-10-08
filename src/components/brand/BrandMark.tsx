@@ -1,4 +1,4 @@
-import { cn } from "@/lib/cn";
+import { cn } from "@/lib/utils";
 import { EyeGlyph } from "./EyeGlyph";
 
 /** Rounded app mark: the eye on a solid ink tile. */

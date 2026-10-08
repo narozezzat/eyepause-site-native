@@ -1,23 +1,21 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  useSyncExternalStore,
-  type KeyboardEvent,
-} from "react";
-import { nextThemeOption, toThemeOption } from "@/lib/theme";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { THEME_OPTIONS, toThemeOption, type ThemeOption } from "@/lib/theme";
 
-type Option = "system" | "light" | "dark";
-const OPTIONS: readonly Option[] = ["system", "light", "dark"];
-const LABELS: Record<Option, string> = { system: "System", light: "Light", dark: "Dark" };
+const LABELS: Record<ThemeOption, string> = { system: "System", light: "Light", dark: "Dark" };
 
 const subscribe = () => () => {};
 
-function ThemeIcon({ option }: { option: Option }) {
+function ThemeIcon({ option }: { option: ThemeOption }) {
   return (
     <svg className="theme-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       {option === "light" ? (
@@ -48,118 +46,107 @@ export function ThemeToggle() {
     () => true,
     () => false,
   );
-  const current: Option = mounted ? toThemeOption(theme) : "system";
+  const current: ThemeOption = mounted ? toThemeOption(theme) : "system";
   const [open, setOpen] = useState(false);
-  const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
-  const items = useRef<(HTMLButtonElement | null)[]>([]);
-  const menuId = useId();
+  const items = useRef<Partial<Record<ThemeOption, HTMLButtonElement | null>>>({});
+  // A click outside closes the menu without pulling focus back to the trigger.
+  const closedOutside = useRef(false);
+  const focusedChecked = useRef(false);
+  // Radix opens on pointerdown and blocks the click's own focus, so the browser
+  // would treat focus moved into the menu as keyboard focus and show its ring.
+  const openedWithPointer = useRef(false);
 
   useEffect(() => {
     if (!open) return;
-    items.current[OPTIONS.indexOf(current)]?.focus({ preventScroll: true });
-    const onPointerDown = (event: PointerEvent) => {
-      if (!root.current?.contains(event.target as Node)) setOpen(false);
-    };
     // The header is sticky, so an open menu would hang still while the page
     // slides under it. Close on a real scroll, like a native macOS menu, but
     // ignore the tail of trackpad momentum or a smooth scroll still settling.
     const startY = window.scrollY;
     const onScroll = () => {
-      if (Math.abs(window.scrollY - startY) < 24) return;
-      setOpen(false);
-      trigger.current?.focus({ preventScroll: true });
+      if (Math.abs(window.scrollY - startY) >= 24) setOpen(false);
     };
-    document.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, [open, current]);
-
-  const choose = (option: Option) => {
-    setTheme(option);
-    setOpen(false);
-    trigger.current?.focus({ preventScroll: true });
-  };
-
-  const onTriggerKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
-    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      event.preventDefault();
-      setOpen(true);
-    }
-  };
-
-  const onMenuKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      setOpen(false);
-      trigger.current?.focus({ preventScroll: true });
-      return;
-    }
-    if (event.key === "Tab") {
-      setOpen(false);
-      return;
-    }
-    const index = items.current.indexOf(document.activeElement as HTMLButtonElement);
-    const option = nextThemeOption(OPTIONS[Math.max(index, 0)], event.key);
-    const next = option === null ? null : OPTIONS.indexOf(option);
-    if (next === null) return;
-    event.preventDefault();
-    items.current[next]?.focus({ preventScroll: true });
-  };
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [open]);
 
   return (
-    <div className="theme-menu" ref={root}>
-      <button
-        ref={trigger}
-        type="button"
-        className="theme-trigger"
-        aria-label={`Color theme: ${LABELS[current]}`}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-controls={open ? menuId : undefined}
-        data-pending={mounted ? undefined : ""}
-        onClick={() => setOpen((value) => !value)}
-        onKeyDown={onTriggerKeyDown}
-      >
-        <ThemeIcon option={current} />
-        <span className="theme-current">{LABELS[current]}</span>
-        <svg className="theme-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="m7 10 5 5 5-5" />
-        </svg>
-      </button>
-      {open && (
-        <div
-          id={menuId}
-          role="menu"
-          aria-label="Color theme"
+    <div className="theme-menu">
+      <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
+        <DropdownMenuTrigger asChild>
+          <button
+            ref={trigger}
+            type="button"
+            className="theme-trigger"
+            aria-label={`Color theme: ${LABELS[current]}`}
+            data-pending={mounted ? undefined : ""}
+            onPointerDown={() => {
+              openedWithPointer.current = true;
+            }}
+            onKeyDown={() => {
+              openedWithPointer.current = false;
+            }}
+          >
+            <ThemeIcon option={current} />
+            <span className="theme-current">{LABELS[current]}</span>
+            <svg className="theme-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="m7 10 5 5 5-5" />
+            </svg>
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
           className="theme-list"
-          onKeyDown={onMenuKeyDown}
+          align="end"
+          sideOffset={8}
+          loop
+          onFocus={(event) => {
+            // Radix focuses the list (pointer) or its first item (keyboard) on
+            // open. Start on the checked option instead, once per open.
+            if (event.target !== event.currentTarget || focusedChecked.current) return;
+            focusedChecked.current = true;
+            queueMicrotask(() =>
+              items.current[current]?.focus({ preventScroll: true, focusVisible: !openedWithPointer.current }),
+            );
+          }}
+          onInteractOutside={() => {
+            closedOutside.current = true;
+          }}
+          onCloseAutoFocus={(event) => {
+            // Radix's own refocus would scroll the page; the header is sticky.
+            event.preventDefault();
+            if (!closedOutside.current) trigger.current?.focus({ preventScroll: true });
+            closedOutside.current = false;
+            focusedChecked.current = false;
+          }}
+          onKeyDown={(event) => {
+            // Radix keeps Tab inside the menu; a menu should close on Tab instead.
+            if (event.key === "Tab") {
+              event.preventDefault();
+              setOpen(false);
+            }
+          }}
         >
-          {OPTIONS.map((option, i) => (
-            <button
-              key={option}
-              ref={(node) => {
-                items.current[i] = node;
-              }}
-              type="button"
-              role="menuitemradio"
-              aria-checked={option === current}
-              tabIndex={-1}
-              className="theme-item"
-              onClick={() => choose(option)}
-            >
-              <ThemeIcon option={option} />
-              <span>{LABELS[option]}</span>
-              <svg className="theme-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="m5 12.5 4.5 4.5L19 7.5" />
-              </svg>
-            </button>
-          ))}
-        </div>
-      )}
+          <DropdownMenuRadioGroup className="theme-options" value={current} onValueChange={(value) => setTheme(toThemeOption(value))}>
+            {THEME_OPTIONS.map((option) => (
+              <DropdownMenuRadioItem key={option} value={option} asChild>
+                <button
+                  ref={(node) => {
+                    items.current[option] = node;
+                  }}
+                  type="button"
+                  className="theme-item"
+                >
+                  <ThemeIcon option={option} />
+                  <span>{LABELS[option]}</span>
+                  <svg className="theme-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="m5 12.5 4.5 4.5L19 7.5" />
+                  </svg>
+                </button>
+              </DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }
