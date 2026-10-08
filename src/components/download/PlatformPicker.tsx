@@ -1,5 +1,6 @@
 "use client";
 
+import { Apple, Grid2x2, SquareTerminal, type LucideIcon } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface PlatformChoice {
@@ -15,6 +16,12 @@ interface PlatformPickerProps {
   recommended: string | null;
   onSelect: (id: string) => void;
 }
+
+const icons: Record<string, LucideIcon> = {
+  macos: Apple,
+  windows: Grid2x2,
+  linux: SquareTerminal,
+};
 
 /** Segmented control following the ARIA radio group pattern: one tab stop, arrows move and select. */
 export function PlatformPicker({
@@ -48,9 +55,13 @@ export function PlatformPicker({
           : c.comingSoon
             ? `${c.label}, coming soon`
             : undefined;
+        const Icon = icons[c.id];
         return (
           <RadioGroupItem key={c.id} value={c.id} aria-label={name}>
-            {c.label}
+            <span className="platform-name">
+              {Icon && <Icon aria-hidden="true" />}
+              {c.label}
+            </span>
             <small aria-hidden="true">{tag}</small>
           </RadioGroupItem>
         );
