@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { BrandMark } from "@/components/brand/BrandMark";
+import { EyeGlyph } from "@/components/brand/EyeGlyph";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { Button } from "@/components/ui/button";
 import { withBasePath } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -11,21 +12,24 @@ export const metadata: Metadata = {
 export default function NotFound() {
   const home = withBasePath("/");
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div className="flex min-h-dvh flex-col">
       <Header home={home} />
-      <main id="main" tabIndex={-1} className="grid max-w-160 justify-items-start py-16 sm:py-20 lg:py-28">
-        <BrandMark size="large" />
-        <p className="mt-7 font-mono text-xs leading-none font-medium tracking-[0.08em] text-fg-subtle">404</p>
-        <h1 className="mt-3.5 text-title font-semibold tracking-[-0.03em] text-balance">
-          Look 20 feet away. This page isn&apos;t there either.
-        </h1>
-        <p className="mt-3.5 text-lede text-fg-muted">The link may be old or mistyped.</p>
-        <a
-          className="mt-7 inline-flex min-h-11 items-center rounded-xl bg-accent px-4.5 font-semibold text-accent-fg no-underline hover:brightness-105 focus-visible:outline-offset-3"
-          href={home}
-        >
-          Back to EyePause
-        </a>
+      <main
+        id="main"
+        tabIndex={-1}
+        className="mx-auto grid w-full flex-1 max-w-6xl place-items-center px-4 py-16 sm:px-6 md:py-20 lg:px-8"
+      >
+        <div className="grid max-w-lg justify-items-center text-center">
+          <EyeGlyph className="size-10 text-fg-subtle" strokeWidth={1.6} />
+          <p className="mt-6 font-mono text-caption text-fg-subtle tabular-nums">404</p>
+          <h1 className="mt-2 text-section font-semibold tracking-[-0.03em] text-balance">
+            Look 20 feet away. This page isn&apos;t there either.
+          </h1>
+          <p className="mt-4 text-lede text-fg-muted text-pretty">The link may be old or mistyped.</p>
+          <Button href={home} size="lg" className="mt-8">
+            Back to EyePause
+          </Button>
+        </div>
       </main>
       <Footer />
     </div>

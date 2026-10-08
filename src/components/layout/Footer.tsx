@@ -1,8 +1,19 @@
 export function Footer() {
   return (
-    <footer className="flex flex-wrap justify-between gap-3 border-t border-border pt-5 pb-9 text-ui text-fg-subtle">
-      <span>© EyePause</span>
-      <span>Free · No account · No tracking</span>
-    </footer>
+    <div className="wrap">
+      <footer className="site-footer">
+        <span className="brand">
+          <svg aria-hidden="true">
+            <use href="#eye" />
+          </svg>
+          EyePause
+        </span>
+        <span>A little less screen. A little more around you.</span>
+        <span className="footer-credit">
+          <span className="footer-copy">©</span> {new Date().getFullYear()}{" "}
+          <strong>Naroz Ezzat</strong>
+        </span>
+      </footer>
+    </div>
   );
 }

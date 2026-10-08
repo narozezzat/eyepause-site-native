@@ -1,30 +1,67 @@
-import { DownloadPanel } from "@/components/download/DownloadPanel";
-import type { DownloadOption } from "@/lib/releases";
+import { ArrowDownToLine } from "lucide-react";
 import { ProductShot } from "./ProductShot";
-
-export function Hero({ options }: { options: DownloadOption[] }) {
-  const version = (options.find((o) => o.platformId === "macos") ?? options[0])?.version;
-
+export function Hero() {
   return (
-    <section
-      className="grid grid-cols-1 items-start gap-10 pt-8 pb-16 sm:pt-12 sm:pb-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16 lg:pt-14 lg:pb-28"
-      aria-labelledby="hero-h"
-    >
-      <div id="download" className="scroll-mt-6">
-        <span className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.75 font-mono text-xs leading-none font-medium text-fg-muted">
-          <i className="size-1.5 rounded-full bg-accent" aria-hidden="true" />
-          {version ? `v${version} · ` : ""}Free · No account
-        </span>
-        <h1 id="hero-h" className="mt-5.5 text-display font-semibold tracking-[-0.035em] text-balance">
-          A break reminder that lives in your menu bar.
-        </h1>
-        <p className="mt-5 max-w-[44ch] text-lede text-fg-muted">
-          Every 20 minutes, EyePause asks you to look 20 feet away for 20 seconds. It pauses on
-          idle, lock and calls, then gets out of the way.
-        </p>
-        <DownloadPanel options={options} />
+    <section className="hero" aria-labelledby="hero-title">
+      <div className="hero-intro">
+        <div>
+          <div className="eyebrow">
+            <span className="status-dot"></span>A little room for your eyes
+          </div>
+          <h1 id="hero-title">
+            In your menu bar.
+            <br />
+            On your side.
+          </h1>
+        </div>
+        <div className="intro-right">
+          <p className="lede">
+            A small reminder to look away.
+            <br />
+            EyePause makes the 20–20–20 rule part of your day on Mac.
+          </p>
+          <div className="hero-action">
+            <a className="btn" href="#download">
+              Get EyePause for Mac
+              <ArrowDownToLine aria-hidden="true" />
+            </a>
+            <span className="caption">Free. Always local.</span>
+          </div>
+        </div>
       </div>
       <ProductShot />
+      <div className="rule">
+        <p>
+          A simple rhythm.
+          <br />A moment beyond your screen.
+        </p>
+        <div className="rule-units">
+          <div className="unit">
+            <b>20</b>
+            <span>
+              minutes
+              <br />
+              between breaks
+            </span>
+          </div>
+          <div className="unit">
+            <b>20</b>
+            <span>
+              feet
+              <br />
+              into the distance
+            </span>
+          </div>
+          <div className="unit">
+            <b>20</b>
+            <span>
+              seconds
+              <br />
+              just for your eyes
+            </span>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

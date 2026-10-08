@@ -1,20 +1,20 @@
 "use client";
 
 import { useCountdown } from "@/hooks/useCountdown";
-import { cn } from "@/lib/cn";
+import { cn } from "@/lib/utils";
 
 /* Mock-ups of the real app's screens for the tour. All decorative: each is a single role="img". */
 
 /** Desktop backdrop for the break card and heads-up toast. */
 const screen =
-  "relative grid min-h-85 place-items-center overflow-hidden rounded-xl border border-border bg-surface-2 p-4 sm:p-5.5";
+  "relative grid min-h-85 place-items-center overflow-hidden rounded-window border border-border bg-surface-2 p-4 sm:p-5.5";
 /** A macOS window. */
-const win = "overflow-hidden rounded-xl border border-border bg-surface text-ui shadow-elev";
+const win = "overflow-hidden rounded-card border border-border bg-surface text-caption shadow-float";
 const chip =
-  "inline-block flex-none rounded-md bg-accent-soft px-2 py-1.25 font-mono text-3xs leading-none font-medium tracking-[0.1em] text-accent";
+  "inline-block flex-none rounded-[calc(var(--radius-control)-4px)] bg-accent-soft px-2 py-1.25 font-mono text-micro leading-none font-medium tracking-caps text-accent-text";
 const optRow = "flex items-center justify-between gap-3 border-b border-border py-2.25";
-const optDetail = "block text-2xs text-fg-subtle";
-const mockButton = "rounded-lg p-2 text-xs font-medium";
+const optDetail = "block text-micro text-fg-subtle";
+const mockButton = "rounded-[calc(var(--radius-control)-2px)] p-2 text-xs font-medium";
 
 function TitleBar({ title }: { title: string }) {
   return (
@@ -33,7 +33,7 @@ export function BreakScreen({ active }: { active: boolean }) {
   const [b, ref] = useCountdown<HTMLDivElement>(20, 20, active);
   return (
     <div ref={ref} className={screen} role="img" aria-label="Floating break card counting down 20 seconds">
-      <div className="w-full max-w-95 rounded-2xl border border-border bg-surface p-5 text-center shadow-elev sm:p-6">
+      <div className="w-full max-w-95 rounded-window border border-border bg-surface p-5 text-center shadow-float sm:p-6">
         <span className={chip}>MICRO BREAK</span>
         <div className="relative mx-auto my-4 grid size-30 place-items-center">
           <svg className="absolute inset-0" viewBox="0 0 120 120" fill="none">
@@ -55,14 +55,14 @@ export function BreakScreen({ active }: { active: boolean }) {
           </b>
         </div>
         <h4 className="mb-1 text-lede font-semibold">Look away from your screen</h4>
-        <p className="mb-1 text-ui text-fg-muted">Focus on an object at least 20 feet (6m) away.</p>
-        <p className="mb-1 text-ui text-fg-muted">Blink slowly to lubricate your eyes.</p>
+        <p className="mb-1 text-caption text-fg-muted">Focus on an object at least 20 feet (6m) away.</p>
+        <p className="mb-1 text-caption text-fg-muted">Blink slowly to lubricate your eyes.</p>
         <div className="mt-4 grid grid-cols-1 gap-1.5 sm:grid-cols-[1fr_1fr_1.3fr]">
           <span className={cn(mockButton, "bg-surface-2")}>Skip</span>
           <span className={cn(mockButton, "bg-surface-2")}>Snooze</span>
           <span className={cn(mockButton, "bg-accent text-accent-fg")}>I&apos;m Done</span>
         </div>
-        <div className="mt-2.5 font-mono text-2xs text-fg-subtle">Exit Break (Esc)</div>
+        <div className="mt-2.5 font-mono text-micro text-fg-subtle">Exit Break (Esc)</div>
       </div>
     </div>
   );
@@ -76,7 +76,7 @@ export function HeadsUpScreen() {
       aria-label="Heads-up toast under the menu bar: break in 30 seconds, Postpone 5 min"
     >
       <div className="absolute inset-x-0 top-0 h-6.5 border-b border-border bg-menu-bar" />
-      <div className="absolute top-6.5 left-1/2 flex w-[min(92%,340px)] -translate-x-1/2 items-center gap-3 rounded-b-card border border-t-0 border-border bg-surface px-3.5 py-3 text-left shadow-elev">
+      <div className="absolute top-6.5 left-1/2 flex w-[min(92%,340px)] -translate-x-1/2 items-center gap-3 rounded-b-card border border-t-0 border-border bg-surface px-3.5 py-3 text-left shadow-float">
         <svg className="size-7.5 flex-none" viewBox="0 0 30 30" fill="none">
           <circle className="stroke-border" cx="15" cy="15" r="12" strokeWidth="3" />
           <circle
@@ -92,16 +92,16 @@ export function HeadsUpScreen() {
           />
         </svg>
         <span className="min-w-0">
-          <b className="block text-ui">Break in 30s</b>
-          <small className="text-2xs text-fg-subtle">Micro break · 20 sec</small>
+          <b className="block text-caption">Break in 30s</b>
+          <small className="text-micro text-fg-subtle">Micro break · 20 sec</small>
         </span>
-        <em className="ml-auto rounded-[7px] bg-surface-2 px-2.25 py-1.5 text-xs font-medium whitespace-nowrap not-italic">
+        <em className="ml-auto rounded-[calc(var(--radius-control)-2px)] bg-surface-2 px-2.25 py-1.5 text-xs font-medium whitespace-nowrap not-italic">
           Postpone 5 min
         </em>
       </div>
       <div className="grid w-[70%] gap-2.5 opacity-50">
         {[80, 100, 60, 90, 40].map((w, i) => (
-          <i key={i} className="h-2.5 rounded-[5px] bg-border" style={{ width: `${w}%` }} />
+          <i key={i} className="h-2.5 rounded-[calc(var(--radius-control)-4px)] bg-border" style={{ width: `${w}%` }} />
         ))}
       </div>
     </div>
@@ -146,7 +146,7 @@ export function StatisticsScreen() {
           {stats.map(([value, label]) => (
             <div key={label} className="rounded-control border border-border px-3 py-2.5">
               <b className="block font-mono text-lg leading-tight font-medium tabular-nums">{value}</b>
-              <span className="text-2xs text-fg-subtle">{label}</span>
+              <span className="text-micro text-fg-subtle">{label}</span>
             </div>
           ))}
         </div>
@@ -158,12 +158,12 @@ export function StatisticsScreen() {
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-7 gap-2 text-center font-mono text-3xs font-medium text-fg-subtle">
+        <div className="grid grid-cols-7 gap-2 text-center font-mono text-micro font-medium text-fg-subtle">
           {days.map((d) => (
             <span key={d}>{d}</span>
           ))}
         </div>
-        <div className="mt-2.5 flex flex-wrap gap-x-3.5 gap-y-1 text-2xs text-fg-subtle">
+        <div className="mt-2.5 flex flex-wrap gap-x-3.5 gap-y-1 text-micro text-fg-subtle">
           <span>
             <i className={cn("mr-1.25 inline-block size-2 rounded-xs", completed)} />
             Completed
@@ -207,8 +207,8 @@ export function SettingsScreen() {
             <span
               key={s}
               className={cn(
-                "rounded-md px-2.25 py-1.5",
-                s === "Schedule" ? "bg-accent-soft font-medium text-accent" : "text-fg-muted",
+                "rounded-[calc(var(--radius-control)-4px)] px-2.25 py-1.5",
+                s === "Schedule" ? "bg-accent-soft font-medium text-accent-text" : "text-fg-muted",
               )}
             >
               {s}
@@ -216,7 +216,7 @@ export function SettingsScreen() {
           ))}
         </div>
         <div className="grid content-start gap-1 px-4 py-4 sm:px-4.5">
-          <h5 className="mb-1.5 font-mono text-2xs leading-none font-medium tracking-[0.08em] text-fg-subtle uppercase">
+          <h5 className="mb-1.5 font-mono text-micro leading-none font-medium tracking-caps text-fg-subtle uppercase">
             Preset
           </h5>
           <div className="mb-2 grid grid-cols-1 gap-1.5 sm:grid-cols-3">
@@ -224,8 +224,8 @@ export function SettingsScreen() {
               <div
                 key={p.name}
                 className={cn(
-                  "rounded-lg border p-2 text-xs",
-                  p.on ? "border-accent shadow-[inset_0_0_0_1px_var(--color-accent)]" : "border-border",
+                  "rounded-[calc(var(--radius-control)-2px)] border p-2 text-xs",
+                  p.on ? "border-accent ring-1 ring-accent ring-inset" : "border-border",
                 )}
               >
                 <b className="block">{p.name}</b>
@@ -241,7 +241,7 @@ export function SettingsScreen() {
               </span>
               <i
                 className={cn(
-                  "relative h-4.5 w-7.5 flex-none rounded-full after:absolute after:top-0.5 after:size-3.5 after:rounded-full after:bg-knob after:shadow-knob after:content-['']",
+                  "relative h-4.5 w-7.5 flex-none rounded-full after:absolute after:top-0.5 after:size-3.5 after:rounded-full after:bg-knob after:ring-1 after:ring-border-strong/40 after:content-['']",
                   t.on ? "bg-accent after:left-3.5" : "bg-border after:left-0.5",
                 )}
               />

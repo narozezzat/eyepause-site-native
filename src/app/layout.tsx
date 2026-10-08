@@ -1,20 +1,20 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { NativeIcons } from "@/components/brand/NativeIcons";
 import { Splash } from "@/components/brand/Splash";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { SkipLink } from "@/components/ui/SkipLink";
 import { site } from "@/config/site";
 import "./globals.css";
 
 const geist = Geist({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   variable: "--font-geist",
   display: "swap",
 });
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
   variable: "--font-geist-mono",
   display: "swap",
 });
@@ -29,22 +29,36 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fbfcfd" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b0d10" },
+    { media: "(prefers-color-scheme: light)", color: "#F6F8FA" },
+    { media: "(prefers-color-scheme: dark)", color: "#0E1013" },
   ],
 };
 
+/**
+ * Hides the hero until its intro starts, so it never flashes in its final
+ * state first. Skipped under reduced motion; un-hides after 3s if scripts fail.
+ */
+const motionBoot = `(function(){var r=document.documentElement;if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;r.dataset.motion="pending";setTimeout(function(){if(r.dataset.motion==="pending")r.dataset.motion="off"},3000)})()`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${geist.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: motionBoot }} />
+      </head>
       <body>
+        {/* The route streams behind a Suspense boundary; without JS, reveal it and drop the loading fallback.
+            The theme layer is used because Tailwind's preflight hides [hidden] with !important in base. */}
+        <noscript>
+          <style>{`@layer theme{[hidden][id^="S:"]{display:block!important}}.route-loading,.theme-toggle-placeholder{display:none}`}</style>
+        </noscript>
         <ThemeProvider>
-          <a
-            className="fixed top-3 left-3 z-20 inline-flex min-h-11 -translate-y-[200%] items-center rounded-control bg-fg px-4 font-semibold text-bg no-underline focus-visible:translate-y-0"
-            href="#main"
-          >
-            Skip to content
-          </a>
+          <NativeIcons />
+          <SkipLink />
           <Splash />
           {children}
         </ThemeProvider>

@@ -1,38 +1,54 @@
-import type { ReactNode } from "react";
-
-const features: { title: string; body: ReactNode }[] = [
-  { title: "Runs 100% on your Mac", body: "Never connects to the internet. No account, no tracking." },
-  { title: "Wellness nudges", body: "Blink, posture, water and stand reminders. Off by default." },
-  { title: "Global shortcuts", body: "Your own keys for Pause, Break Now and Skip." },
-  {
-    title: "Automation",
-    body: (
-      <>
-        Shortcuts and Raycast via{" "}
-        <code className="rounded-[5px] bg-surface-2 px-1.5 py-0.75 font-mono text-xs leading-none whitespace-nowrap">
-          eyepause://break
-        </code>
-      </>
-    ),
-  },
-  { title: "Pause for…", body: "15 min, 30 min, 1 hour, or until tomorrow." },
-  { title: "Lightweight", body: "Near-zero CPU while idle. Native SwiftUI." },
-];
+import { Moon, Settings2 } from "lucide-react";
 
 export function Features() {
   return (
-    <section className="border-t border-border py-16 sm:py-20 lg:py-28" id="features" aria-labelledby="feat-h">
-      <h2 id="feat-h" className="mb-2 text-title font-semibold tracking-[-0.03em]">
-        Small, and complete
-      </h2>
-      <ul className="mt-6 grid grid-cols-1 gap-px overflow-hidden rounded-card border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
-        {features.map((f) => (
-          <li key={f.title} className="bg-bg p-5">
-            <h3 className="mb-1 text-body font-semibold">{f.title}</h3>
-            <p className="text-sm text-fg-muted">{f.body}</p>
-          </li>
-        ))}
-      </ul>
+    <section className="feature-band">
+      <div className="wrap">
+        <div className="details">
+          <div className="details-intro">
+            <h2>
+              Thoughtful about
+              <br />
+              your time.
+            </h2>
+            <p>The useful details, right where you expect them.</p>
+          </div>
+          <div>
+            <div className="ledger-row">
+              <Moon aria-hidden="true" />
+              <div>
+                <h3>Away from your Mac? So is the timer.</h3>
+                <p>
+                  Smart pause follows idle time, sleep, and screen lock. Your
+                  break schedule waits for you.
+                </p>
+              </div>
+            </div>
+            <div className="ledger-row">
+              <svg aria-hidden="true">
+                <use href="#eye" />
+              </svg>
+              <div>
+                <h3>A change of focus.</h3>
+                <p>
+                  Guided eye exercises bring a little variety to your breaks,
+                  from gentle blinking to near-and-far focus.
+                </p>
+              </div>
+            </div>
+            <div className="ledger-row">
+              <Settings2 aria-hidden="true" />
+              <div>
+                <h3>Make yourself comfortable.</h3>
+                <p>
+                  Adjust your schedule, choose your sounds, and launch at login.
+                  Set it once; let EyePause keep time.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, type KeyboardEvent } from "react";
-import { PlatformIcon } from "./PlatformIcon";
-import { cn } from "@/lib/cn";
+import { Apple, Grid2x2, SquareTerminal, type LucideIcon } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface PlatformChoice {
   id: string;
   label: string;
+  comingSoon?: boolean;
+  available?: boolean;
 }
 
 interface PlatformPickerProps {
@@ -16,73 +17,55 @@ interface PlatformPickerProps {
   onSelect: (id: string) => void;
 }
 
-const step: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+const icons: Record<string, LucideIcon> = {
+  macos: Apple,
+  windows: Grid2x2,
+  linux: SquareTerminal,
+};
 
 /** Segmented control following the ARIA radio group pattern: one tab stop, arrows move and select. */
-export function PlatformPicker({ choices, selected, recommended, onSelect }: PlatformPickerProps) {
-  const refs = useRef<Record<string, HTMLButtonElement | null>>({});
-
-  function move(index: number) {
-    const next = choices[(index + choices.length) % choices.length];
-    onSelect(next.id);
-    refs.current[next.id]?.focus();
-  }
-
-  function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    const current = choices.findIndex((c) => c.id === selected);
-    if (event.key === "Home") {
-      event.preventDefault();
-      move(0);
-    } else if (event.key === "End") {
-      event.preventDefault();
-      move(choices.length - 1);
-    } else if (event.key in step) {
-      event.preventDefault();
-      move(current + step[event.key]);
-    }
-  }
-
+export function PlatformPicker({
+  choices,
+  selected,
+  recommended,
+  onSelect,
+}: PlatformPickerProps) {
   return (
-    <div
-      className="flex gap-0.5 rounded-control bg-surface-2 p-[3px]"
-      role="radiogroup"
+    <RadioGroup
+      className="platforms"
       aria-label="Platform"
-      onKeyDown={onKeyDown}
+      value={selected}
+      onValueChange={onSelect}
+      onKeyDown={(event) => {
+        // Radix moves focus on Home and End but only selects on arrows.
+        if (event.key === "Home") onSelect(choices[0].id);
+        else if (event.key === "End") onSelect(choices[choices.length - 1].id);
+      }}
     >
       {choices.map((c) => {
-        const checked = c.id === selected;
         const isRecommended = c.id === recommended;
+        const tag = c.comingSoon
+          ? "Coming soon"
+          : c.available
+            ? "Available now"
+            : "Available soon";
+        const device = c.id === "macos" ? "this Mac" : "this computer";
+        const name = isRecommended
+          ? `${c.label}, recommended for ${device}`
+          : c.comingSoon
+            ? `${c.label}, coming soon`
+            : undefined;
+        const Icon = icons[c.id];
         return (
-          <button
-            key={c.id}
-            ref={(el) => {
-              refs.current[c.id] = el;
-            }}
-            type="button"
-            role="radio"
-            aria-checked={checked}
-            tabIndex={checked ? 0 : -1}
-            aria-label={isRecommended ? `${c.label}, recommended for this device` : undefined}
-            className={cn(
-              "flex min-h-11 flex-[1_0_auto] cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-ui font-medium whitespace-nowrap transition-[background-color,color,box-shadow] hover:text-fg focus-visible:outline-offset-[-1px] sm:gap-2",
-              checked ? "bg-surface text-fg shadow-seg" : "text-fg-muted",
-            )}
-            onClick={() => onSelect(c.id)}
-          >
-            <PlatformIcon className="size-[15px] flex-none" platformId={c.id} />
-            {c.label}
-            {isRecommended && (
-              // Below sm the badge collapses to an accent dot; the radio's aria-label still says "recommended".
-              <span
-                className="inline-flex size-1.5 items-center rounded-full bg-accent font-mono text-3xs font-medium tracking-[0.06em] text-accent uppercase sm:size-auto sm:rounded-[5px] sm:bg-accent-soft sm:px-[5px] sm:py-[3px]"
-                aria-hidden="true"
-              >
-                <span className="hidden sm:inline">Recommended</span>
-              </span>
-            )}
-          </button>
+          <RadioGroupItem key={c.id} value={c.id} aria-label={name}>
+            <span className="platform-name">
+              {Icon && <Icon aria-hidden="true" />}
+              {c.label}
+            </span>
+            <small aria-hidden="true">{tag}</small>
+          </RadioGroupItem>
         );
       })}
-    </div>
+    </RadioGroup>
   );
 }
