@@ -1,5 +1,6 @@
 "use client";
 
+import { Check, ChevronDown, Monitor, Moon, Sun, type LucideIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
@@ -15,24 +16,11 @@ const LABELS: Record<ThemeOption, string> = { system: "System", light: "Light", 
 
 const subscribe = () => () => {};
 
+const ICONS: Record<ThemeOption, LucideIcon> = { system: Monitor, light: Sun, dark: Moon };
+
 function ThemeIcon({ option }: { option: ThemeOption }) {
-  return (
-    <svg className="theme-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      {option === "light" ? (
-        <>
-          <circle cx="12" cy="12" r="4" />
-          <path d="M12 2.75v1.5M12 19.75v1.5M4.75 4.75l1.06 1.06M18.19 18.19l1.06 1.06M2.75 12h1.5M19.75 12h1.5M4.75 19.25l1.06-1.06M18.19 5.81l1.06-1.06" />
-        </>
-      ) : option === "dark" ? (
-        <path d="M19.5 14.6A7.75 7.75 0 0 1 9.4 4.5a7.75 7.75 0 1 0 10.1 10.1Z" />
-      ) : (
-        <>
-          <rect x="3" y="4.5" width="18" height="12" rx="2" />
-          <path d="M8.5 20h7M12 16.5V20" />
-        </>
-      )}
-    </svg>
-  );
+  const Icon = ICONS[option];
+  return <Icon className="theme-icon" aria-hidden="true" focusable="false" />;
 }
 
 /**
@@ -89,9 +77,7 @@ export function ThemeToggle() {
           >
             <ThemeIcon option={current} />
             <span className="theme-current">{LABELS[current]}</span>
-            <svg className="theme-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d="m7 10 5 5 5-5" />
-            </svg>
+            <ChevronDown className="theme-chevron" aria-hidden="true" focusable="false" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -138,9 +124,7 @@ export function ThemeToggle() {
                 >
                   <ThemeIcon option={option} />
                   <span>{LABELS[option]}</span>
-                  <svg className="theme-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="m5 12.5 4.5 4.5L19 7.5" />
-                  </svg>
+                  <Check className="theme-check" aria-hidden="true" focusable="false" />
                 </button>
               </DropdownMenuRadioItem>
             ))}

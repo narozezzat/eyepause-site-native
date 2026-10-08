@@ -1,3 +1,4 @@
+import { Lock } from "lucide-react";
 import type { CSSProperties } from "react";
 export function Specs() {
   return (
@@ -90,9 +91,7 @@ export function Specs() {
           of making a little time for yourself.
         </p>
         <div className="privacy">
-          <svg aria-hidden="true">
-            <use href="#lock" />
-          </svg>
+          <Lock aria-hidden="true" />
           Your history stays on your Mac.
         </div>
       </div>

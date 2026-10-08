@@ -1,3 +1,5 @@
+import { Moon, Settings2 } from "lucide-react";
+
 export function Features() {
   return (
     <section className="feature-band">
@@ -13,9 +15,7 @@ export function Features() {
           </div>
           <div>
             <div className="ledger-row">
-              <svg aria-hidden="true">
-                <use href="#moon" />
-              </svg>
+              <Moon aria-hidden="true" />
               <div>
                 <h3>Away from your Mac? So is the timer.</h3>
                 <p>
@@ -37,9 +37,7 @@ export function Features() {
               </div>
             </div>
             <div className="ledger-row">
-              <svg aria-hidden="true">
-                <use href="#sliders" />
-              </svg>
+              <Settings2 aria-hidden="true" />
               <div>
                 <h3>Make yourself comfortable.</h3>
                 <p>

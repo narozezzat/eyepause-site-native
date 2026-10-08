@@ -52,6 +52,7 @@ Work at Staff-engineer level: clean, scalable, maintainable code that matches th
 - **Tokens only:** colors come from the CSS variables and `@theme` tokens in `globals.css` (`--bg`, `--fg`, `--surface`, `--accent`, `--border`, …, and Tailwind classes like `bg-surface`, `text-fg-muted`). No hex, rgb or arbitrary color values in components.
 - **Both themes:** every change must look right in light and dark (and system). Define a new color as a token with values for both themes, never inside one theme only.
 - **rem over px:** spacing, typography, sizing and radius use rem (16px root: `13px` = `0.8125rem`). px is allowed only for borders and 1px hairlines, outlines and outline offsets, shadows, transforms, and `@media` / `@container` breakpoints.
+- **Icons:** lucide-react (named imports); keep the site's stroke width/size via props/classes. Custom SVG only for brand marks and app mocks.
 - **Responsive:** check 375, 768 and 1440 widths. No horizontal page scroll.
 - **Accessibility:** semantic HTML first (`button`, `a`, `nav`, `section`, headings in order), ARIA only where semantics fall short. Every interactive control has an accessible name and a visible `:focus-visible` state. Respect `prefers-reduced-motion`. Keep contrast at WCAG AA in both themes.
 - Use `focus({ preventScroll: true })` when moving focus programmatically: the header is sticky and scrolling is smooth, so a plain `focus()` scrolls the page.

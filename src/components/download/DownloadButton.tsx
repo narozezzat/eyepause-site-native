@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowDownToLine, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Notice } from "@/components/ui/Notice";
 import { useDownloadState } from "@/hooks/useDownloadState";
@@ -18,25 +19,8 @@ interface DownloadButtonProps {
 }
 
 function ArrowIcon({ done }: { done: boolean }) {
-  return (
-    <svg
-      className="size-4 flex-none"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      focusable="false"
-    >
-      {done ? (
-        <path d="m5 12.5 4.5 4.5L19 7.5" />
-      ) : (
-        <path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14" />
-      )}
-    </svg>
-  );
+  const Icon = done ? Check : ArrowDownToLine;
+  return <Icon className="size-4 flex-none" aria-hidden="true" focusable="false" />;
 }
 
 /** version · size · macOS 14+ · date, as honest small print under the button. */

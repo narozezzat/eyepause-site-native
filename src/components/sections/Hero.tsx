@@ -1,3 +1,4 @@
+import { ArrowDownToLine } from "lucide-react";
 import { ProductShot } from "./ProductShot";
 export function Hero() {
   return (
@@ -22,9 +23,7 @@ export function Hero() {
           <div className="hero-action">
             <a className="btn" href="#download">
               Get EyePause for Mac
-              <svg aria-hidden="true">
-                <use href="#down" />
-              </svg>
+              <ArrowDownToLine aria-hidden="true" />
             </a>
             <span className="caption">Free. Always local.</span>
           </div>

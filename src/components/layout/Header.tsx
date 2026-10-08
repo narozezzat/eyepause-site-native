@@ -1,3 +1,4 @@
+import { ArrowDownToLine } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 export function Header({ home = "#main" }: { home?: string }) {
@@ -20,9 +21,7 @@ export function Header({ home = "#main" }: { home?: string }) {
           <ThemeToggle />
           <a className="nav-download" href={to("#download")}>
             Download
-            <svg aria-hidden="true">
-              <use href="#down" />
-            </svg>
+            <ArrowDownToLine aria-hidden="true" />
           </a>
         </div>
       </nav>

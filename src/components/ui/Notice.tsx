@@ -1,3 +1,4 @@
+import { CircleAlert, CircleCheck, Info, type LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
@@ -9,25 +10,15 @@ const iconTone: Record<NoticeTone, string> = {
   success: "text-success",
 };
 
+const toneIcon: Record<NoticeTone, LucideIcon> = {
+  info: Info,
+  error: CircleAlert,
+  success: CircleCheck,
+};
+
 function ToneIcon({ tone }: { tone: NoticeTone }) {
-  return (
-    <svg
-      className="mt-0.5 size-4 flex-none"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <circle cx="12" cy="12" r="9" />
-      {tone === "success" && <path d="m8 12.5 2.5 2.5L16 9.5" />}
-      {tone === "error" && <path d="M12 7.5v5.5M12 16.5h.01" />}
-      {tone === "info" && <path d="M12 11v5.5M12 7.5h.01" />}
-    </svg>
-  );
+  const Icon = toneIcon[tone];
+  return <Icon className="mt-0.5 size-4 flex-none" aria-hidden="true" focusable="false" />;
 }
 
 interface NoticeProps {
