@@ -9,7 +9,7 @@ export function Features() {
             <h2>
               Thoughtful about
               <br />
-              your time.
+              <span className="accent-line">your time.</span>
             </h2>
             <p>The useful details, right where you expect them.</p>
           </div>

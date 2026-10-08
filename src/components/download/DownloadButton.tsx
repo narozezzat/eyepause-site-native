@@ -25,7 +25,16 @@ function ArrowIcon({ done }: { done: boolean }) {
 
 /** version · size · macOS 14+ · date, as honest small print under the button. */
 export function MetaRow({ parts }: { parts: string[] }) {
-  return <p className="meta wrap-anywhere">{parts.join(" · ")}</p>;
+  return (
+    <p className="meta wrap-anywhere">
+      {parts.map((part, i) => (
+        <span key={part}>
+          {i > 0 && <span className="sr-only"> · </span>}
+          {part}
+        </span>
+      ))}
+    </p>
+  );
 }
 
 function deviceName(option: DownloadOption) {
@@ -156,7 +165,7 @@ function ReadyButton({
         </Button>
         {option.alternate && (
           <a
-            className="inline-flex min-h-11 items-center rounded-control text-body-sm text-fg-muted underline decoration-border-strong underline-offset-4 transition-colors duration-150 hover:text-fg hover:decoration-fg"
+            className="alt-download inline-flex min-h-11 items-center rounded-control text-body-sm text-fg-muted underline decoration-border-strong underline-offset-4 transition-colors duration-150 hover:text-fg hover:decoration-fg"
             href={option.alternate.href}
             download={option.alternate.name}
           >

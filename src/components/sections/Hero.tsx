@@ -48,7 +48,7 @@ export function Hero() {
           <div className="unit">
             <b>20</b>
             <span>
-              minutes
+              minutes{" "}
               <br />
               between breaks
             </span>
@@ -56,7 +56,7 @@ export function Hero() {
           <div className="unit">
             <b>20</b>
             <span>
-              feet
+              feet{" "}
               <br />
               into the distance
             </span>
@@ -64,7 +64,7 @@ export function Hero() {
           <div className="unit">
             <b>20</b>
             <span>
-              seconds
+              seconds{" "}
               <br />
               just for your eyes
             </span>
