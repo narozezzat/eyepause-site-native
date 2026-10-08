@@ -5,6 +5,7 @@ import { parseRelease } from "./parse";
 import { resolveDownloads } from "./resolve";
 import type { DownloadOption, Release } from "./types";
 
+export { downloadView, downloadMeta, type DownloadView } from "./view";
 export type { DownloadOption, DownloadFile, DownloadStatus, Release } from "./types";
 
 export function getRelease(): Release {

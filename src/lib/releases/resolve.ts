@@ -30,6 +30,7 @@ export function resolveDownloads(
       version: release.version,
       publishedAt: release.publishedAt,
       requirements: platform.requirements,
+      minimumOs: platform.minimumOs ?? null,
     };
     if (platform.status === "coming-soon") {
       return { ...base, status: "coming-soon", primary: null, alternate: null };

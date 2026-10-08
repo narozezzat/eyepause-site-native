@@ -1,169 +1,202 @@
 "use client";
 
-import { useId } from "react";
+import { Button } from "@/components/ui/Button";
+import { Notice } from "@/components/ui/Notice";
 import { useDownloadState } from "@/hooks/useDownloadState";
-import { formatBytes, formatDate } from "@/lib/format";
-import type { DownloadFile, DownloadOption } from "@/lib/releases";
-import { PlatformIcon } from "./PlatformIcon";
-import { cn } from "@/lib/cn";
-
-/** Bordered note card under the download button (install steps, empty and error states). */
-export const noteCard = "animate-rise rounded-xl border text-sm";
-export const noteSpacing = "mt-3.5 px-4 py-3.5";
-export const noteColors = "border-border bg-surface";
-
-const primaryBase =
-  "flex min-h-16 w-full items-center gap-3.5 rounded-xl px-4 py-3.5 text-left no-underline focus-visible:outline-offset-3";
-const iconTile = "grid size-9 flex-none place-items-center rounded-[9px]";
-const titleText = "block text-body font-semibold";
-const metaText = "block font-mono text-xs leading-[1.4] opacity-80";
+import {
+  downloadMeta,
+  type DownloadFile,
+  type DownloadOption,
+  type DownloadView,
+} from "@/lib/releases";
+import { InstallSteps } from "./InstallSteps";
 
 interface DownloadButtonProps {
   option: DownloadOption;
+  view: Exclude<DownloadView, "mobile">;
   installSteps: string[];
-  recommended: boolean;
 }
 
-export function DownloadButton({ option, installSteps, recommended }: DownloadButtonProps) {
-  if (option.status === "coming-soon") {
+function ArrowIcon({ done }: { done: boolean }) {
+  return (
+    <svg
+      className="size-4 flex-none"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {done ? (
+        <path d="m5 12.5 4.5 4.5L19 7.5" />
+      ) : (
+        <path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14" />
+      )}
+    </svg>
+  );
+}
+
+/** version · size · macOS 14+ · date, as honest small print under the button. */
+export function MetaRow({ parts }: { parts: string[] }) {
+  return <p className="meta wrap-anywhere">{parts.join(" · ")}</p>;
+}
+
+function deviceName(option: DownloadOption) {
+  return option.platformId === "macos" ? "Mac" : option.label;
+}
+
+export function DownloadButton({
+  option,
+  view,
+  installSteps,
+}: DownloadButtonProps) {
+  if (view === "ready" && option.primary) {
     return (
-      <div className={cn(noteCard, noteColors, "p-4.5 [animation-duration:0.3s]")}>
-        <b className="block font-semibold">No {option.label} build yet</b>
-        <p className="mt-1 text-sm text-fg-muted">
-          EyePause is macOS-only for now. {option.label} support is planned and will be available
-          here when it ships.
-        </p>
+      <ReadyButton
+        option={option}
+        primary={option.primary}
+        installSteps={installSteps}
+      />
+    );
+  }
+
+  if (view === "coming-soon") {
+    return (
+      <div className="animate-rise">
+        <Notice
+          className="download-message"
+          role={null}
+          title={`No ${option.label} build yet`}
+        >
+          EyePause is a Mac app for now. A {option.label} version is planned and
+          will be offered here when it ships.
+        </Notice>
+        <button className="btn download-button" disabled>
+          Coming soon
+        </button>
       </div>
     );
   }
 
-  if (option.status === "unavailable" || !option.primary) {
-    return <UnavailableButton option={option} />;
+  if (view === "error" && option.alternate) {
+    const alt = option.alternate;
+    return (
+      <div className="animate-rise">
+        <Notice
+          className="download-message"
+          tone="error"
+          role={null}
+          title={`The ${deviceName(option)} installer is missing from this release`}
+        >
+          Version {option.version} shipped without its usual disk image. The .
+          {alt.label.toLowerCase()} below installs the same app: unzip it and
+          drag EyePause to Applications.
+        </Notice>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Button
+            href={alt.href}
+            download={alt.name}
+            size="lg"
+            fullWidth
+            className="sm:w-auto"
+            icon={<ArrowIcon done={false} />}
+          >
+            Download .{alt.label.toLowerCase()}
+          </Button>
+        </div>
+        <MetaRow parts={downloadMeta(option, alt)} />
+      </div>
+    );
   }
 
   return (
-    <AvailableButton
-      option={option}
-      primary={option.primary}
-      installSteps={installSteps}
-      recommended={recommended}
-    />
-  );
-}
-
-function downloadTitle(option: DownloadOption): string {
-  return `Download for ${option.platformId === "macos" ? "Mac" : option.label}`;
-}
-
-function UnavailableButton({ option }: { option: DownloadOption }) {
-  const noteId = useId();
-  return (
-    <>
-      <button
-        type="button"
-        className={cn(primaryBase, "cursor-not-allowed bg-surface-2 text-fg-subtle")}
-        disabled
-        aria-describedby={noteId}
-      >
-        <span className={cn(iconTile, "bg-surface")}>
-          <PlatformIcon className="size-4.5" platformId={option.platformId} />
-        </span>
-        <span>
-          <b className={titleText}>{downloadTitle(option)}</b>
-          <small className={metaText}>Temporarily unavailable</small>
-        </span>
+    <div className="animate-rise">
+      <MetaRow parts={downloadMeta(option, null)} />
+      <button className="btn download-button" disabled>
+        Download available soon
       </button>
-      <div className={cn(noteCard, noteSpacing, "border-danger/35 bg-danger-soft")} id={noteId}>
-        <b className="block font-semibold text-danger">Download temporarily unavailable</b>
-        <p className="mt-1 text-sm text-fg-muted">
-          The installer for version {option.version} could not be attached to this page. Nothing is
-          wrong on your side. Please check back a little later.
-        </p>
-      </div>
-    </>
+      <Notice
+        className="download-message"
+        role={null}
+        title="Installer not available yet"
+      >
+        The installer for version {option.version} isn&apos;t attached to this
+        page yet. Nothing is wrong on your side. Please check back a little
+        later.
+      </Notice>
+      <p className="mt-3 text-caption text-fg-subtle text-pretty">
+        Requires {option.requirements}.
+      </p>
+    </div>
   );
 }
 
-function AvailableButton({
+function ReadyButton({
   option,
   primary,
   installSteps,
-  recommended,
-}: DownloadButtonProps & { primary: DownloadFile }) {
+}: Omit<DownloadButtonProps, "view"> & { primary: DownloadFile }) {
   const { state, begin } = useDownloadState();
   const busy = state === "starting";
   const done = state === "started";
-  const title = busy ? "Preparing download…" : done ? "Downloading EyePause" : downloadTitle(option);
+  const label = busy
+    ? "Starting download…"
+    : done
+      ? "Download started"
+      : `Download for ${deviceName(option)}`;
 
   return (
-    <>
-      <a
-        className={cn(
-          primaryBase,
-          "cursor-pointer bg-accent text-accent-fg transition-[filter,transform] hover:brightness-105 active:scale-[0.99]",
-        )}
-        href={primary.href}
-        download={primary.name}
-        aria-busy={busy || undefined}
-        onClick={() => {
-          if (state === "idle") begin();
-        }}
-      >
-        <span className={cn(iconTile, "bg-white/20")}>
-          {busy ? (
-            <span
-              className="size-4.5 animate-spin rounded-full border-2 border-current border-r-transparent"
-              aria-hidden="true"
-            />
-          ) : (
-            <PlatformIcon className="size-4.5" platformId={option.platformId} />
-          )}
-        </span>
-        <span className="min-w-0">
-          <b className={titleText}>{title}</b>
-          <small className={metaText}>
-            {recommended ? `Recommended for this ${option.platformId === "macos" ? "Mac" : "device"} · ` : ""}
-            {primary.label} · {formatBytes(primary.size)}
-          </small>
-        </span>
-        <span className="ml-auto text-lg" aria-hidden="true">
-          {done ? "✓" : "↓"}
-        </span>
-      </a>
-      <div className="mt-1 flex flex-wrap items-center justify-between gap-x-2 font-mono text-xs leading-normal text-fg-subtle">
-        <span className="py-1">
-          Version {option.version} · {formatDate(option.publishedAt)}
-        </span>
+    <div>
+      <MetaRow parts={downloadMeta(option)} />
+      <div className="download-actions">
+        <Button
+          href={primary.href}
+          download={primary.name}
+          size="lg"
+          busy={busy}
+          fullWidth
+          className="native-download-action"
+          icon={<ArrowIcon done={done} />}
+          onClick={(event) => {
+            if (busy) {
+              event.preventDefault();
+              return;
+            }
+            begin();
+          }}
+        >
+          {label}
+        </Button>
         {option.alternate && (
           <a
-            className="inline-flex min-h-11 items-center underline-offset-3 hover:text-fg"
+            className="inline-flex min-h-11 items-center rounded-control text-body-sm text-fg-muted underline decoration-border-strong underline-offset-4 transition-colors duration-150 hover:text-fg hover:decoration-fg"
             href={option.alternate.href}
             download={option.alternate.name}
           >
-            Also as .{option.alternate.label.toLowerCase()} · {formatBytes(option.alternate.size)}
+            or .{option.alternate.label.toLowerCase()}
           </a>
         )}
       </div>
       {done && installSteps.length > 0 && (
-        <div className={cn(noteCard, noteSpacing, noteColors)}>
-          <b className="block font-semibold">Almost there</b>
-          <ol className="mt-1.5 list-decimal pl-4.5 text-fg-muted">
-            {installSteps.map((s) => (
-              <li key={s}>{s}</li>
-            ))}
-          </ol>
-          <p className="mt-2 text-ui text-fg-subtle">
-            Didn&apos;t start?{" "}
-            <a
-              className="inline-flex min-h-11 items-center text-fg-muted underline underline-offset-3"
-              href={primary.href}
-              download={primary.name}
-            >
-              Download again
-            </a>
-          </p>
+        <div className="install animate-rise">
+          <Notice tone="success" title="Your download has started" role={null}>
+            <InstallSteps steps={installSteps} />
+            <p className="mt-3 text-caption">
+              Didn&apos;t start?{" "}
+              <a
+                className="inline-flex min-h-11 items-center text-fg underline decoration-border-strong underline-offset-4 hover:decoration-fg"
+                href={primary.href}
+                download={primary.name}
+              >
+                Download again
+              </a>
+            </p>
+          </Notice>
         </div>
       )}
-    </>
+    </div>
   );
 }
