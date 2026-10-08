@@ -1,4 +1,4 @@
-import { ArrowDownToLine } from "lucide-react";
+import { ArrowDownToLine, Check } from "lucide-react";
 import { ProductShot } from "./ProductShot";
 export function Hero() {
   return (
@@ -6,26 +6,35 @@ export function Hero() {
       <div className="hero-intro">
         <div>
           <div className="eyebrow">
-            <span className="status-dot"></span>A little room for your eyes
+            <span className="status-dot" aria-hidden="true"></span>A little room for your eyes
           </div>
           <h1 id="hero-title">
             In your menu bar.
             <br />
-            On your side.
+            <span className="accent-line">On your side.</span>
           </h1>
         </div>
         <div className="intro-right">
           <p className="lede">
-            A small reminder to look away.
+            <span className="lede-lead">A small reminder to look away.</span>
             <br />
             EyePause makes the 20–20–20 rule part of your day on Mac.
           </p>
           <div className="hero-action">
-            <a className="btn" href="#download">
+            <a className="btn hero-cta" href="#download">
               Get EyePause for Mac
               <ArrowDownToLine aria-hidden="true" />
             </a>
-            <span className="caption">Free. Always local.</span>
+            <ul className="assurances">
+              <li>
+                <Check aria-hidden="true" />
+                Free
+              </li>
+              <li>
+                <Check aria-hidden="true" />
+                Always local
+              </li>
+            </ul>
           </div>
         </div>
       </div>

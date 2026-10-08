@@ -1,3 +1,4 @@
+import { EyeOff, HardDrive, UserX } from "lucide-react";
 import { DownloadPanel } from "@/components/download/DownloadPanel";
 import type { DownloadOption } from "@/lib/releases";
 export function Download({ options }: { options: DownloadOption[] }) {
@@ -16,12 +17,26 @@ export function Download({ options }: { options: DownloadOption[] }) {
           </div>
           <h2 id="download-title">
             A small addition.
-            <br />A welcome pause.
+            <br />
+            <span className="accent-line">A welcome pause.</span>
           </h2>
           <p>
             Give EyePause a place in your menu bar. Your next break is on us.
           </p>
-          <span className="caption">100% local. No account. No telemetry.</span>
+          <ul className="assurances download-assurances">
+            <li>
+              <HardDrive aria-hidden="true" />
+              100% local
+            </li>
+            <li>
+              <UserX aria-hidden="true" />
+              No account
+            </li>
+            <li>
+              <EyeOff aria-hidden="true" />
+              No telemetry
+            </li>
+          </ul>
         </div>
         <DownloadPanel options={options} />
       </div>
