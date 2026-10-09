@@ -8,7 +8,6 @@ const twMerge = extendTailwindMerge({
     theme: {
       text: ["body-sm", "caption", "display", "lede", "micro", "section", "title"],
       radius: ["control", "card", "window"],
-      shadow: ["float"],
       tracking: ["caps"],
     },
   },

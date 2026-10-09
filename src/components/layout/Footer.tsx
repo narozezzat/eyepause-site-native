@@ -1,7 +1,7 @@
 export function Footer() {
   return (
-    <div className="wrap">
-      <footer className="site-footer">
+    <footer className="site-footer">
+      <div className="wrap footer-inner">
         <span className="brand">
           <svg aria-hidden="true">
             <use href="#eye" />
@@ -13,7 +13,7 @@ export function Footer() {
           <span className="footer-copy">©</span> {new Date().getFullYear()}{" "}
           <strong>Naroz Ezzat</strong>
         </span>
-      </footer>
-    </div>
+      </div>
+    </footer>
   );
 }
