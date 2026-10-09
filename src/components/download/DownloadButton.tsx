@@ -152,6 +152,7 @@ function ReadyButton({
           busy={busy}
           fullWidth
           className="native-download-action"
+          data-done={done || undefined}
           icon={<ArrowIcon done={done} />}
           onClick={(event) => {
             if (busy) {

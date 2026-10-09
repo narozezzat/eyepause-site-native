@@ -1,17 +1,14 @@
-import { ArrowDownToLine, Check } from "lucide-react";
+import { ArrowDownToLine } from "lucide-react";
 import { ProductShot } from "./ProductShot";
 export function Hero() {
   return (
     <section className="hero" aria-labelledby="hero-title">
-      <div className="hero-intro">
-        <div>
-          <div className="eyebrow">
-            <span className="status-dot" aria-hidden="true"></span>A little room for your eyes
-          </div>
+      <div className="hero-intro grid-12">
+        <div className="hero-head">
+          <p className="eyebrow">EyePause for macOS — 01</p>
           <h1 id="hero-title">
-            In your menu bar.
-            <br />
-            <span className="accent-line">On your side.</span>
+            <span className="line">In your menu bar.</span>
+            <span className="line accent-line serif">On your side.</span>
           </h1>
         </div>
         <div className="intro-right">
@@ -25,45 +22,53 @@ export function Hero() {
               Get EyePause for Mac
               <ArrowDownToLine aria-hidden="true" />
             </a>
-            <ul className="assurances">
-              <li>
-                <Check aria-hidden="true" />
-                Free
-              </li>
-              <li>
-                <Check aria-hidden="true" />
-                Always local
-              </li>
+            <ul className="facts">
+              <li>Free</li>
+              <li>Always local</li>
             </ul>
           </div>
         </div>
       </div>
       <ProductShot />
       <div className="rule">
-        <p>
+        <p className="rule-lead serif">
           A simple rhythm.
           <br />A moment beyond your screen.
         </p>
         <div className="rule-units">
           <div className="unit">
-            <b>20</b>
-            <span>
+            <svg className="unit-glyph" aria-hidden="true" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+            <b className="serif">20</b>
+            <i className="unit-rule" aria-hidden="true" />
+            <span className="label">
               minutes{" "}
               <br />
               between breaks
             </span>
           </div>
           <div className="unit">
-            <b>20</b>
-            <span>
+            <svg className="unit-glyph" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M3 15h18M7 15a5 5 0 0 1 10 0" />
+            </svg>
+            <b className="serif">20</b>
+            <i className="unit-rule" aria-hidden="true" />
+            <span className="label">
               feet{" "}
               <br />
               into the distance
             </span>
           </div>
           <div className="unit">
-            <b>20</b>
-            <span>
+            <svg className="unit-glyph" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M3 12c3-4 15-4 18 0" />
+              <path d="M8 15l-1 2M12 16v2M16 15l1 2" />
+            </svg>
+            <b className="serif">20</b>
+            <i className="unit-rule" aria-hidden="true" />
+            <span className="label">
               seconds{" "}
               <br />
               just for your eyes

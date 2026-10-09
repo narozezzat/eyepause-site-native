@@ -1,11 +1,12 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { useCountdown } from "@/hooks/useCountdown";
 import { cn } from "@/lib/utils";
 
 /* Mock-ups of the real app's screens for the tour. All decorative: each is a single role="img". */
 
-/** Desktop backdrop for the break card and heads-up toast. */
+/** Desktop backdrop for the break card. */
 const screen =
   "relative grid min-h-85 place-items-center overflow-hidden rounded-window border border-border bg-surface-2 p-4 sm:p-5.5";
 /** A macOS window. */
@@ -29,8 +30,19 @@ function TitleBar({ title }: { title: string }) {
 
 const BREAK_RING = 326.7;
 
+const motionQuery = "(prefers-reduced-motion: no-preference)";
+const subscribeMotion = (notify: () => void) => {
+  const query = window.matchMedia(motionQuery);
+  query.addEventListener("change", notify);
+  return () => query.removeEventListener("change", notify);
+};
+const motionSnapshot = () => window.matchMedia(motionQuery).matches;
+const serverMotionSnapshot = () => false;
+
 export function BreakScreen({ active }: { active: boolean }) {
-  const [b, ref] = useCountdown<HTMLDivElement>(20, 20, active);
+  const motionAllowed = useSyncExternalStore(subscribeMotion, motionSnapshot, serverMotionSnapshot);
+  const [seconds, ref] = useCountdown<HTMLDivElement>(20, 20, active && motionAllowed);
+  const b = motionAllowed ? seconds : 20;
   return (
     <div ref={ref} className={screen} role="img" aria-label="Floating break card counting down 20 seconds">
       <div className="w-full max-w-95 rounded-window border border-border bg-surface p-5 text-center shadow-float sm:p-6">
@@ -39,7 +51,7 @@ export function BreakScreen({ active }: { active: boolean }) {
           <svg className="absolute inset-0" viewBox="0 0 120 120" fill="none">
             <circle className="stroke-border" cx="60" cy="60" r="52" strokeWidth="5" />
             <circle
-              className="stroke-accent transition-[stroke-dashoffset] duration-1000 ease-linear"
+              className="stroke-accent motion-safe:transition-[stroke-dashoffset] motion-safe:duration-1000 motion-safe:ease-linear"
               cx="60"
               cy="60"
               r="52"
@@ -63,46 +75,6 @@ export function BreakScreen({ active }: { active: boolean }) {
           <span className={cn(mockButton, "bg-accent text-accent-fg")}>I&apos;m Done</span>
         </div>
         <div className="mt-2.5 font-mono text-micro text-fg-subtle">Exit Break (Esc)</div>
-      </div>
-    </div>
-  );
-}
-
-export function HeadsUpScreen() {
-  return (
-    <div
-      className={screen}
-      role="img"
-      aria-label="Heads-up toast under the menu bar: break in 30 seconds, Postpone 5 min"
-    >
-      <div className="absolute inset-x-0 top-0 h-6.5 border-b border-border bg-menu-bar" />
-      <div className="absolute top-6.5 left-1/2 flex w-[min(92%,340px)] -translate-x-1/2 items-center gap-3 rounded-b-card border border-t-0 border-border bg-surface px-3.5 py-3 text-left shadow-float">
-        <svg className="size-7.5 flex-none" viewBox="0 0 30 30" fill="none">
-          <circle className="stroke-border" cx="15" cy="15" r="12" strokeWidth="3" />
-          <circle
-            className="stroke-accent"
-            cx="15"
-            cy="15"
-            r="12"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeDasharray="75.4"
-            strokeDashoffset="37.7"
-            transform="rotate(-90 15 15)"
-          />
-        </svg>
-        <span className="min-w-0">
-          <b className="block text-caption">Break in 30s</b>
-          <small className="text-micro text-fg-subtle">Micro break · 20 sec</small>
-        </span>
-        <em className="ml-auto rounded-[calc(var(--radius-control)-2px)] bg-surface-2 px-2.25 py-1.5 text-xs font-medium whitespace-nowrap not-italic">
-          Postpone 5 min
-        </em>
-      </div>
-      <div className="grid w-[70%] gap-2.5 opacity-50">
-        {[80, 100, 60, 90, 40].map((w, i) => (
-          <i key={i} className="h-2.5 rounded-[calc(var(--radius-control)-4px)] bg-border" style={{ width: `${w}%` }} />
-        ))}
       </div>
     </div>
   );
@@ -145,14 +117,14 @@ export function StatisticsScreen() {
         <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
           {stats.map(([value, label]) => (
             <div key={label} className="rounded-control border border-border px-3 py-2.5">
-              <b className="block font-mono text-lg leading-tight font-medium tabular-nums">{value}</b>
+              <b className="stat-value block font-mono text-lg leading-tight font-medium tabular-nums">{value}</b>
               <span className="text-micro text-fg-subtle">{label}</span>
             </div>
           ))}
         </div>
         <div className="mt-4 mb-1 grid h-27.5 grid-cols-7 items-end gap-2">
           {week.map(([h, c, k], i) => (
-            <div key={days[i]} className="flex flex-col-reverse overflow-hidden rounded-sm" style={{ height: `${h}%` }}>
+            <div key={days[i]} className="stat-bar flex flex-col-reverse overflow-hidden rounded-sm" style={{ height: `${h}%` }}>
               <span className={completed} style={{ flex: c }} />
               <span className={skipped} style={{ flex: k }} />
             </div>
@@ -176,7 +148,7 @@ export function StatisticsScreen() {
         </div>
         <div className="mt-3.5 grid grid-flow-col grid-cols-[repeat(26,minmax(0,1fr))] grid-rows-7 gap-0.5">
           {Array.from(heat, (level, i) => (
-            <i key={i} className={cn("aspect-square rounded-xs", heatClass[Number(level)])} />
+            <i key={i} className={cn("stat-heat aspect-square rounded-xs", heatClass[Number(level)])} />
           ))}
         </div>
       </div>
@@ -240,9 +212,11 @@ export function SettingsScreen() {
                 {t.detail && <small className={optDetail}>{t.detail}</small>}
               </span>
               <i
+                data-toggle=""
+                data-on={t.on || undefined}
                 className={cn(
-                  "relative h-4.5 w-7.5 flex-none rounded-full after:absolute after:top-0.5 after:size-3.5 after:rounded-full after:bg-knob after:ring-1 after:ring-border-strong/40 after:content-['']",
-                  t.on ? "bg-accent after:left-3.5" : "bg-border after:left-0.5",
+                  "relative h-4.5 w-7.5 flex-none rounded-full after:absolute after:top-0.5 after:left-0.5 after:size-3.5 after:rounded-full after:bg-knob after:ring-1 after:ring-border-strong/40 after:content-['']",
+                  t.on ? "bg-accent after:translate-x-3" : "bg-border",
                 )}
               />
             </div>
@@ -267,7 +241,7 @@ export function SmartPauseScreen() {
       <TitleBar title="Status" />
       <div className="grid gap-2 p-4 sm:p-4.5">
         {statuses.map((s) => (
-          <div key={s.title} className={cn(optRow, "last:border-b-0")}>
+          <div key={s.title} data-status-row="" className={cn(optRow, "last:border-b-0")}>
             <span className="min-w-0">
               <b>{s.title}</b>
               <small className={optDetail}>{s.detail}</small>

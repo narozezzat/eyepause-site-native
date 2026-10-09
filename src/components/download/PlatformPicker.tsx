@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { Apple, Grid2x2, SquareTerminal, type LucideIcon } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -33,6 +34,10 @@ export function PlatformPicker({
   return (
     <RadioGroup
       className="platforms"
+      style={{
+        "--seg-index": Math.max(0, choices.findIndex((c) => c.id === selected)),
+        "--seg-count": choices.length,
+      } as CSSProperties}
       aria-label="Platform"
       value={selected}
       onValueChange={onSelect}
@@ -57,7 +62,7 @@ export function PlatformPicker({
             : undefined;
         const Icon = icons[c.id];
         return (
-          <RadioGroupItem key={c.id} value={c.id} aria-label={name}>
+          <RadioGroupItem key={c.id} value={c.id} aria-label={name} data-soon={c.comingSoon || undefined}>
             <span className="platform-name">
               {Icon && <Icon aria-hidden="true" />}
               {c.label}
