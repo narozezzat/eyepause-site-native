@@ -169,7 +169,8 @@ function ReadyButton({
             href={option.alternate.href}
             download={option.alternate.name}
           >
-            or .{option.alternate.label.toLowerCase()}
+            Prefer an archive? <b>Get the .{option.alternate.label.toLowerCase()}</b>
+            <ArrowDownToLine aria-hidden="true" focusable="false" />
           </a>
         )}
       </div>
