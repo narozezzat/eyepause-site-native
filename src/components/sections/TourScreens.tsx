@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 const screen =
   "relative grid min-h-85 place-items-center overflow-hidden rounded-window border border-border bg-surface-2 p-4 sm:p-5.5";
 /** A macOS window. */
-const win = "overflow-hidden rounded-card border border-border bg-surface text-caption shadow-float";
+const win = "overflow-hidden rounded-card border border-border bg-surface text-caption";
 const chip =
   "inline-block flex-none rounded-[calc(var(--radius-control)-4px)] bg-accent-soft px-2 py-1.25 font-mono text-micro leading-none font-medium tracking-caps text-accent-text";
 const optRow = "flex items-center justify-between gap-3 border-b border-border py-2.25";
@@ -33,7 +33,7 @@ export function BreakScreen({ active }: { active: boolean }) {
   const [b, ref] = useCountdown<HTMLDivElement>(20, 20, active);
   return (
     <div ref={ref} className={screen} role="img" aria-label="Floating break card counting down 20 seconds">
-      <div className="w-full max-w-95 rounded-window border border-border bg-surface p-5 text-center shadow-float sm:p-6">
+      <div className="w-full max-w-95 rounded-window border border-border bg-surface p-5 text-center sm:p-6">
         <span className={chip}>MICRO BREAK</span>
         <div className="relative mx-auto my-4 grid size-30 place-items-center">
           <svg className="absolute inset-0" viewBox="0 0 120 120" fill="none">
@@ -76,7 +76,7 @@ export function HeadsUpScreen() {
       aria-label="Heads-up toast under the menu bar: break in 30 seconds, Postpone 5 min"
     >
       <div className="absolute inset-x-0 top-0 h-6.5 border-b border-border bg-menu-bar" />
-      <div className="absolute top-6.5 left-1/2 flex w-[min(92%,340px)] -translate-x-1/2 items-center gap-3 rounded-b-card border border-t-0 border-border bg-surface px-3.5 py-3 text-left shadow-float">
+      <div className="absolute top-6.5 left-1/2 flex w-[min(92%,340px)] -translate-x-1/2 items-center gap-3 rounded-b-card border border-t-0 border-border bg-surface px-3.5 py-3 text-left">
         <svg className="size-7.5 flex-none" viewBox="0 0 30 30" fill="none">
           <circle className="stroke-border" cx="15" cy="15" r="12" strokeWidth="3" />
           <circle

@@ -41,9 +41,6 @@
     sans-serif;
   --font-mono:
     var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
-
-  /* Only things that float (popover, toast, window mock) get a shadow. */
-  --shadow-float: var(--float);
 }
 
 @theme {
@@ -152,8 +149,6 @@
     --ov-accent: #0fcc94;
     --ov-accent-fg: #06392b;
     --ov-tile: #25302b;
-    --float: 0 20px 48px -16px #101c2838, 0 2px 5px #101c2810;
-    --shadow-header: 0 10px 28px -16px #101c2838;
     --radius-control: .625rem;
     --radius-card: .875rem;
     --radius-window: 1.125rem;
@@ -184,8 +179,6 @@
       --success-soft: #163e32;
       --desk: #171e23;
       --desk-line: #303b43;
-      --float: 0 20px 48px -16px #00000080, 0 2px 5px #00000030;
-      --shadow-header: 0 12px 30px -14px #000000b3;
       color-scheme: dark;
     }
   }
@@ -210,8 +203,6 @@
     --success-soft: #163e32;
     --desk: #171e23;
     --desk-line: #303b43;
-    --float: 0 20px 48px -16px #00000080, 0 2px 5px #00000030;
-    --shadow-header: 0 12px 30px -14px #000000b3;
     color-scheme: dark;
   }
   * {
@@ -623,7 +614,6 @@
     background: var(--surface);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-card);
-    box-shadow: var(--float);
   }
   .popover:before {
     content: "";
@@ -819,7 +809,6 @@
     margin: 0 0 -1.125rem auto;
     position: relative;
     z-index: 1;
-    box-shadow: var(--float);
   }
   .toast .logo {
     width: 2.125rem;
@@ -1249,7 +1238,9 @@
   }
   .site-footer {
     border-top: 1px solid var(--border);
-    padding: 1.5rem 0;
+  }
+  .footer-inner {
+    padding-block: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1508,7 +1499,7 @@
     .app-icon svg {
       width: 1.875rem;
     }
-    .site-footer {
+    .footer-inner {
       align-items: start;
       gap: 1.125rem;
       flex-direction: column;
@@ -1740,7 +1731,6 @@
   color: var(--fg);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
-  box-shadow: var(--float);
   transform-origin: top right;
   animation: theme-menu-in 0.16s var(--ease-out);
 }
@@ -1801,6 +1791,7 @@
 }
 @media (max-width: 600px) {
   .theme-trigger {
+    min-height: 2rem;
     padding: 0 .375rem 0 .5rem;
   }
   .theme-current {
@@ -1827,38 +1818,17 @@
 main {
   overflow-x: clip;
 }
-.hero-intro::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: -6rem -4rem -3rem -8rem;
-  background:
-    radial-gradient(
-      38% 55% at 22% 48%,
-      color-mix(in oklab, var(--accent) 16%, transparent),
-      transparent 70%
-    ),
-    radial-gradient(
-      30% 45% at 70% 30%,
-      color-mix(in oklab, var(--accent-text) 8%, transparent),
-      transparent 70%
-    );
-  filter: blur(8px);
-  pointer-events: none;
-}
 .hero .eyebrow {
   display: inline-flex;
   padding: .375rem .75rem .375rem .625rem;
   border: 1px solid color-mix(in oklab, var(--accent-text) 25%, var(--border));
   border-radius: 999px;
   background: color-mix(in oklab, var(--surface) 75%, transparent);
-  box-shadow: 0 6px 18px -12px color-mix(in oklab, var(--accent) 60%, transparent);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
 .hero .status-dot {
   position: relative;
-  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 .hero .status-dot::after {
   content: "";
@@ -1880,14 +1850,7 @@ main {
   }
 }
 .accent-line {
-  background: linear-gradient(
-    100deg,
-    var(--accent-text) 10%,
-    color-mix(in oklab, var(--accent-text) 45%, var(--fg)) 90%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--accent-text);
 }
 .lede-lead {
   color: var(--fg);
@@ -1899,40 +1862,13 @@ main {
   padding: 0 1.375rem 0 1.5rem;
   padding-right: .5rem;
   gap: 1rem;
-  box-shadow:
-    var(--float),
-    inset 0 1px 0 color-mix(in oklab, var(--bg) 18%, transparent),
-    0 0 0 0 transparent;
   transition:
     transform .35s var(--ease-out),
-    box-shadow .35s var(--ease-out),
     background-color .35s var(--ease-out);
-}
-/* One slow light sweep across the button on hover. */
-.hero-cta::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 30%,
-    color-mix(in oklab, var(--bg) 22%, transparent) 50%,
-    transparent 70%
-  );
-  transform: translateX(-120%);
-  transition: transform .9s var(--ease-out);
-  pointer-events: none;
 }
 .hero-cta:hover {
   background: color-mix(in oklab, var(--fg) 90%, var(--accent));
-  box-shadow:
-    var(--float),
-    inset 0 1px 0 color-mix(in oklab, var(--bg) 18%, transparent),
-    0 0 0 4px color-mix(in oklab, var(--accent) 22%, transparent);
   transform: translateY(-1px);
-}
-.hero-cta:hover::before {
-  transform: translateX(120%);
 }
 .hero-cta svg {
   box-sizing: content-box;
@@ -2014,34 +1950,16 @@ main {
   stroke-width: 2;
   color: var(--accent-text);
 }
-/* Gradient hairline: brighter at the icon's corner, fading to the usual border. */
 .download-panel {
   position: relative;
-  border: 1px solid transparent;
-  background:
-    linear-gradient(var(--surface), var(--surface)) padding-box,
-    linear-gradient(
-      135deg,
-      color-mix(in oklab, var(--accent) 70%, var(--border-strong)),
-      var(--border-strong) 35%,
-      var(--border) 70%,
-      color-mix(in oklab, var(--accent) 35%, var(--border-strong))
-    ) border-box;
-  box-shadow:
-    var(--float),
-    0 40px 80px -48px color-mix(in oklab, var(--accent) 45%, transparent);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
 }
 .download-intro {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background:
-    radial-gradient(
-      120% 70% at 0% 0%,
-      color-mix(in oklab, var(--accent) 15%, transparent),
-      transparent 62%
-    ),
-    var(--surface);
+  background: var(--surface);
 }
 /* Concentric focus rings: the far point your eyes rest on, 20 feet away. */
 .download-intro::after {
@@ -2063,15 +1981,7 @@ main {
   pointer-events: none;
 }
 .app-icon {
-  background: linear-gradient(
-    150deg,
-    color-mix(in oklab, var(--accent) 72%, #ffffff),
-    var(--accent) 70%
-  );
-  box-shadow:
-    0 14px 30px -12px color-mix(in oklab, var(--accent) 85%, transparent),
-    0 0 0 6px color-mix(in oklab, var(--accent) 10%, transparent),
-    inset 0 1px 0 #ffffff59;
+  background: var(--accent);
 }
 .download-intro h2 {
   margin-bottom: 1rem;
@@ -2098,8 +2008,7 @@ main {
   border-radius: var(--radius-control);
   transition:
     background-color .3s var(--ease-out),
-    color .3s var(--ease-out),
-    box-shadow .3s var(--ease-out);
+    color .3s var(--ease-out);
 }
 .platforms button:hover {
   background: color-mix(in oklab, var(--surface) 60%, transparent);
@@ -2107,10 +2016,7 @@ main {
 .platforms button[aria-checked="true"],
 .platforms button[aria-checked="true"]:hover {
   background: var(--surface);
-  box-shadow:
-    0 1px 2px color-mix(in oklab, var(--fg) 12%, transparent),
-    0 6px 16px -10px color-mix(in oklab, var(--fg) 40%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--accent-text) 30%, var(--border));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent-text) 30%, var(--border));
 }
 .platforms button[aria-checked="true"] small {
   color: var(--accent-text);
@@ -2185,7 +2091,6 @@ main {
     opacity: 0;
   }
   .hero-cta,
-  .hero-cta::before,
   .hero-cta svg,
   .platforms button {
     transition: none;
@@ -2194,32 +2099,11 @@ main {
   .hero-cta:hover svg {
     transform: none;
   }
-  .hero-cta::before {
-    display: none;
-  }
 }
 
-/* Hero desktop scene: a soft wallpaper, a translucent menu bar, a vibrant popover. */
+/* Hero desktop scene: a plain wallpaper, a translucent menu bar, a vibrant popover. */
 .hero .desktop {
-  background:
-    radial-gradient(
-      45% 70% at 68% 40%,
-      color-mix(in oklab, var(--accent) 13%, transparent),
-      transparent 70%
-    ),
-    radial-gradient(
-      50% 60% at 0% 100%,
-      color-mix(in oklab, var(--accent-text) 7%, transparent),
-      transparent 70%
-    ),
-    linear-gradient(
-      180deg,
-      var(--desk),
-      color-mix(in oklab, var(--desk) 88%, var(--fg))
-    );
-  box-shadow:
-    var(--float),
-    inset 0 1px 0 color-mix(in oklab, #ffffff 8%, transparent);
+  background: var(--desk);
 }
 .hero .menubar {
   background: color-mix(in oklab, var(--surface-2) 72%, transparent);
@@ -2238,18 +2122,8 @@ main {
   color: var(--accent-text);
 }
 .hero .desktop-word {
-  background: linear-gradient(
-    180deg,
-    var(--fg) 0%,
-    color-mix(in oklab, var(--fg) 25%, transparent) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  opacity: .2;
-}
-.hero .desk-bottom-icon {
-  box-shadow: 0 0 0 5px color-mix(in oklab, var(--accent) 8%, transparent);
+  color: var(--fg);
+  opacity: .3;
 }
 .hero .popover,
 .hero .popover:before {
@@ -2259,10 +2133,6 @@ main {
 }
 .hero .popover {
   border-color: color-mix(in oklab, var(--border-strong) 80%, transparent);
-  box-shadow:
-    0 30px 60px -24px color-mix(in oklab, #000000 55%, transparent),
-    0 0 0 .5px color-mix(in oklab, #000000 12%, transparent),
-    inset 0 1px 0 color-mix(in oklab, #ffffff 10%, transparent);
 }
 .hero .popover:before {
   border-top-left-radius: .1875rem;
@@ -2275,7 +2145,6 @@ main {
 }
 .hero .progress {
   stroke-linecap: round;
-  filter: drop-shadow(0 0 6px color-mix(in oklab, var(--accent) 45%, transparent));
 }
 .hero .timer-label strong {
   font-variant-numeric: tabular-nums;
@@ -2283,7 +2152,6 @@ main {
 .hero .pop-actions button {
   border-color: color-mix(in oklab, var(--border) 80%, transparent);
   background: color-mix(in oklab, var(--surface-2) 80%, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in oklab, #ffffff 6%, transparent);
   transition:
     background-color .25s var(--ease-out),
     border-color .25s var(--ease-out);
@@ -2316,9 +2184,6 @@ main {
   backdrop-filter: blur(16px) saturate(1.4);
 }
 .logo {
-  box-shadow:
-    0 4px 14px -4px color-mix(in oklab, var(--accent) 60%, transparent),
-    inset 0 1px 0 color-mix(in oklab, #ffffff 35%, transparent);
 }
 .nav-link {
   position: relative;
@@ -2348,23 +2213,33 @@ main {
   color: var(--accent-text);
   transition:
     background-color .25s var(--ease-out),
-    color .25s var(--ease-out),
-    box-shadow .25s var(--ease-out);
+    color .25s var(--ease-out);
 }
 .nav-download:hover {
   background: var(--accent);
   color: var(--accent-fg);
-  box-shadow: 0 6px 18px -8px color-mix(in oklab, var(--accent) 70%, transparent);
+}
+/* Compact pill on small screens so it doesn't outweigh the brand. */
+@media (max-width: 700px) {
+  .nav-download {
+    min-height: 2rem;
+    padding: 0 .75rem;
+    gap: .375rem;
+    font-size: .75rem;
+  }
+  .nav-download svg {
+    width: .8125rem;
+  }
+}
+@media (max-width: 400px) {
+  .nav-download {
+    padding: 0 .625rem;
+  }
 }
 
-/* The 20-20-20 strip: three accented numbers set on fading hairlines. */
+/* The 20-20-20 strip: three accented numbers between hairlines. */
 .rule {
   position: relative;
-  border-color: transparent;
-  background:
-    linear-gradient(90deg, transparent, var(--border-strong) 20%, var(--border-strong) 80%, transparent) top / 100% 1px no-repeat,
-    linear-gradient(90deg, transparent, var(--border-strong) 20%, var(--border-strong) 80%, transparent) bottom / 100% 1px no-repeat,
-    radial-gradient(60% 120% at 70% 50%, color-mix(in oklab, var(--accent) 6%, transparent), transparent 70%);
 }
 .rule > p {
   color: var(--fg-muted);
@@ -2388,14 +2263,7 @@ main {
 }
 .unit b {
   font-variant-numeric: tabular-nums;
-  background: linear-gradient(
-    180deg,
-    var(--accent-text),
-    color-mix(in oklab, var(--accent-text) 55%, var(--fg))
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--accent-text);
 }
 
 /* Tour: a framed heads-up, a glowing break screen, lit flip tiles. */
@@ -2414,45 +2282,24 @@ main {
   bottom: 1rem;
   width: 3px;
   border-radius: 999px;
-  background: linear-gradient(180deg, var(--accent), color-mix(in oklab, var(--accent) 20%, transparent));
+  background: var(--accent);
 }
 #details .toast {
   background: color-mix(in oklab, var(--surface) 88%, transparent);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
   backdrop-filter: blur(18px) saturate(1.4);
   border-color: color-mix(in oklab, var(--border-strong) 80%, transparent);
-  box-shadow:
-    0 24px 48px -20px color-mix(in oklab, #000000 50%, transparent),
-    inset 0 1px 0 color-mix(in oklab, #ffffff 10%, transparent);
-}
-#details .toast .logo {
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 14%, transparent);
 }
 .break-screen {
   position: relative;
-  background:
-    radial-gradient(55% 65% at 50% 58%, color-mix(in oklab, var(--ov-accent) 16%, transparent), transparent 72%),
-    radial-gradient(80% 50% at 50% 0%, color-mix(in oklab, var(--ov-fg) 5%, transparent), transparent 70%),
-    var(--ov-bg);
-  box-shadow:
-    var(--float),
-    inset 0 1px 0 color-mix(in oklab, var(--ov-fg) 8%, transparent);
+  background: var(--ov-bg);
 }
 .break-screen h3 {
   text-wrap: balance;
 }
 .flip {
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--ov-tile) 80%, var(--ov-fg)) 0%,
-    var(--ov-tile) 50%,
-    color-mix(in oklab, var(--ov-tile) 85%, var(--ov-bg)) 50%,
-    color-mix(in oklab, var(--ov-tile) 70%, var(--ov-bg)) 100%
-  );
+  background: var(--ov-tile);
   border-color: color-mix(in oklab, var(--ov-border) 80%, transparent);
-  box-shadow:
-    0 10px 20px -10px color-mix(in oklab, #000000 70%, transparent),
-    inset 0 1px 0 color-mix(in oklab, var(--ov-fg) 10%, transparent);
   font-variant-numeric: tabular-nums;
 }
 .flip:after {
@@ -2461,7 +2308,6 @@ main {
 #seconds-tens,
 #seconds-ones {
   color: var(--ov-accent);
-  text-shadow: 0 0 18px color-mix(in oklab, var(--ov-accent) 45%, transparent);
 }
 .colon {
   color: var(--ov-accent);
@@ -2493,12 +2339,9 @@ main {
   font-size: .6875rem;
 }
 
-/* Features: a lit band with the details set beside soft icon tiles. */
+/* Features: a plain band with the details set beside soft icon tiles. */
 .feature-band {
-  background:
-    radial-gradient(40% 80% at 10% 0%, color-mix(in oklab, var(--accent) 8%, transparent), transparent 70%),
-    radial-gradient(35% 70% at 95% 100%, color-mix(in oklab, var(--accent-text) 5%, transparent), transparent 70%),
-    var(--surface);
+  background: var(--surface);
 }
 .ledger-row {
   grid-template-columns: 2.25rem 1fr;
@@ -2523,14 +2366,9 @@ main {
   color: var(--accent-fg);
 }
 
-/* Stats: a lit window, a gridded chart, and today picked out in accent. */
+/* Stats: a plain window, a gridded chart, and today picked out in accent. */
 .stats-window {
-  background:
-    radial-gradient(60% 50% at 85% 0%, color-mix(in oklab, var(--accent) 8%, transparent), transparent 70%),
-    var(--surface);
-  box-shadow:
-    var(--float),
-    inset 0 1px 0 color-mix(in oklab, #ffffff 7%, transparent);
+  background: var(--surface);
 }
 .window-head {
   background: color-mix(in oklab, var(--surface-2) 60%, transparent);
@@ -2547,19 +2385,10 @@ main {
 }
 .chart-col i {
   border-radius: .375rem .375rem .125rem .125rem;
-  background: linear-gradient(
-    180deg,
-    var(--border-strong),
-    color-mix(in oklab, var(--border-strong) 45%, transparent)
-  );
+  background: var(--border-strong);
 }
 .chart-col.today i {
-  background: linear-gradient(
-    180deg,
-    var(--accent),
-    color-mix(in oklab, var(--accent) 55%, transparent)
-  );
-  box-shadow: 0 0 18px -2px color-mix(in oklab, var(--accent) 55%, transparent);
+  background: var(--accent);
 }
 .chart-labels span:last-child {
   color: var(--accent-text);
@@ -2585,10 +2414,16 @@ main {
   color: var(--accent-text);
 }
 
-/* Footer: a fading hairline and an accented mark. */
-.site-footer {
-  border-top-color: transparent;
-  background: linear-gradient(90deg, transparent, var(--border-strong) 20%, var(--border-strong) 80%, transparent) top / 100% 1px no-repeat;
+/* Footer: an edge-to-edge hairline like the header's, and an accented mark.
+   Three columns so the tagline sits on the true center. */
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1.5rem;
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+}
+.site-footer .footer-credit {
+  justify-self: end;
 }
 .site-footer .brand {
   color: var(--fg);
@@ -2599,6 +2434,17 @@ main {
 @media (max-width: 700px) {
   .unit + .unit::before {
     display: none;
+  }
+  .footer-inner {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: .75rem;
+    padding-top: 2rem;
+    text-align: center;
+  }
+  .site-footer .footer-credit {
+    justify-self: center;
+    margin-top: .25rem;
   }
 }
 @media (forced-colors: active) {
@@ -2646,44 +2492,15 @@ main {
   height: 3.25rem;
   padding-right: .5rem;
   font-weight: 600;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--accent) 88%, var(--bg)),
-    var(--accent)
-  );
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklab, var(--bg) 28%, transparent),
-    0 8px 24px -10px color-mix(in oklab, var(--accent) 70%, transparent);
+  background: var(--accent);
   transition:
-    transform .35s var(--ease-out),
-    box-shadow .35s var(--ease-out);
-}
-.download-controls .native-download-action::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 30%,
-    color-mix(in oklab, var(--bg) 30%, transparent) 50%,
-    transparent 70%
-  );
-  transform: translateX(-120%);
-  transition: transform .9s var(--ease-out);
-  pointer-events: none;
+    transform .35s var(--ease-out);
 }
 .download-controls .native-download-action:hover {
   transform: translateY(-1px);
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklab, var(--bg) 28%, transparent),
-    0 0 0 4px color-mix(in oklab, var(--accent) 22%, transparent),
-    0 12px 28px -10px color-mix(in oklab, var(--accent) 80%, transparent);
 }
 .download-controls .native-download-action:hover:not(:focus-visible) {
   outline-color: transparent;
-}
-.download-controls .native-download-action:hover::before {
-  transform: translateX(120%);
 }
 .download-controls .native-download-action svg {
   box-sizing: content-box;
@@ -2719,9 +2536,6 @@ main {
   .download-controls .native-download-action:hover svg {
     transform: none;
   }
-  .download-controls .native-download-action::before {
-    display: none;
-  }
 }
 @media (forced-colors: active) {
   .download-controls .meta > span {
@@ -2736,11 +2550,7 @@ main {
 html[data-motion="pending"] :is(.hero-intro, .hero > figure) {
   visibility: hidden;
 }
-.header {
-  transition: box-shadow .5s var(--ease-out);
-}
 html[data-scrolled] .header {
-  box-shadow: var(--shadow-header);
 }
 #timer {
   transition: opacity .5s var(--ease-out);
@@ -2841,22 +2651,11 @@ html.lenis.lenis-smooth {
   isolation: isolate;
   margin: 0;
 }
-.promo-stage::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 10% 4% -8%;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 26%, transparent), transparent);
-  filter: blur(2.5rem);
-  pointer-events: none;
-}
 .promo-window {
   overflow: hidden;
   border: 1px solid var(--ov-border);
   border-radius: var(--radius-window);
   background: var(--ov-bg);
-  box-shadow: var(--shadow-float);
 }
 .promo-titlebar {
   display: grid;
@@ -2906,7 +2705,7 @@ html.lenis.lenis-smooth {
   gap: 1rem;
   width: 100%;
   color: var(--ov-fg);
-  background: radial-gradient(circle, color-mix(in oklab, var(--ov-bg) 50%, transparent), color-mix(in oklab, var(--ov-bg) 25%, transparent) 75%);
+  background: color-mix(in oklab, var(--ov-bg) 35%, transparent);
   backdrop-filter: blur(.375rem) saturate(1.2);
   cursor: pointer;
   transition: backdrop-filter .35s var(--ease-out);
@@ -2921,7 +2720,6 @@ html.lenis.lenis-smooth {
   border-radius: 50%;
   background: var(--ov-accent);
   color: var(--ov-accent-fg);
-  box-shadow: 0 1.25rem 2.5rem -1rem color-mix(in oklab, var(--ov-accent) 80%, transparent);
   transition: scale .35s var(--ease-out);
 }
 .promo-play-icon::after {
