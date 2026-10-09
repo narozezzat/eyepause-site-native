@@ -10,3 +10,10 @@ export const site = {
 export function withBasePath(path: string): string {
   return `${site.basePath}${path}`;
 }
+
+/** The story's beats that the header links to, in page order. */
+export const sections = [
+  { id: "details", index: "02", label: "The pause" },
+  { id: "product", index: "04", label: "The details" },
+  { id: "habit", index: "05", label: "The habit" },
+] as const satisfies readonly { id: string; index: string; label: string }[];

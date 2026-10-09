@@ -67,7 +67,7 @@ export function PromoVideo() {
             </button>
           ))}
         </div>
-        <p className="promo-meta">
+        <p className="promo-meta label">
           <span>{meta.runtime}</span>
           <span>Narrated in {meta.name}</span>
           <span>Captioned</span>
@@ -109,7 +109,7 @@ export function PromoVideo() {
                     <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z" />
                   </svg>
                 </span>
-                <span className="promo-play-label" aria-hidden="true">
+                <span className="promo-play-label label" aria-hidden="true">
                   Play tour <b>{meta.runtime}</b>
                 </span>
               </button>

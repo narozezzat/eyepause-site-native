@@ -1,8 +1,9 @@
 import { Footer } from "@/components/layout/Footer";
 import { MotionRuntime } from "@/components/motion/MotionRuntime";
 import { Header } from "@/components/layout/Header";
-import { Features } from "@/components/sections/Features";
+import { ProductDetails } from "@/components/sections/ProductDetails";
 import { Hero } from "@/components/sections/Hero";
+import { Problem } from "@/components/sections/Problem";
 import { Specs } from "@/components/sections/Specs";
 import { Tour } from "@/components/sections/Tour";
 import { Watch } from "@/components/sections/Watch";
@@ -17,13 +18,16 @@ export default function Home() {
         <div className="wrap">
           <Hero />
           <Watch />
+        </div>
+        <Problem />
+        <div className="wrap">
           <Tour />
         </div>
-        <Features />
+        <ProductDetails />
         <div className="wrap">
           <Specs />
-          <Download options={getDownloads()} />
         </div>
+        <Download options={getDownloads()} />
       </main>
       <Footer />
       {/* Lives with the page, not the layout, so it runs after the page (behind

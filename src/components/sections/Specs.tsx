@@ -1,100 +1,27 @@
-import { Lock } from "lucide-react";
-import type { CSSProperties } from "react";
+import { StatisticsScreen } from "./TourScreens";
+
+/** Beat 05: the habit, as the app's own statistics window shows it. */
 export function Specs() {
   return (
-    <section className="section stats-section">
-      <figure
-        className="stats-window"
-        aria-label="Sample weekly statistics: 84 breaks taken this week, 6 today"
-      >
-        <div className="window-head">
-          <span className="traffic"></span>
-          <span className="traffic"></span>
-          <span className="traffic"></span>
-          <span>EyePause · Sample statistics</span>
-        </div>
-        <div className="stats-body">
-          <div className="stats-title">
-            A week of looking up.<span>2–8 Jun</span>
-          </div>
-          <div className="stat-number">
-            84<small>breaks this week</small>
-          </div>
-          <div className="chart" aria-hidden="true">
-            <div
-              className="chart-col"
-              style={{ "--height": "70%" } as CSSProperties}
-            >
-              <i></i>
-            </div>
-            <div
-              className="chart-col"
-              style={{ "--height": "85%" } as CSSProperties}
-            >
-              <i></i>
-            </div>
-            <div
-              className="chart-col"
-              style={{ "--height": "60%" } as CSSProperties}
-            >
-              <i></i>
-            </div>
-            <div
-              className="chart-col"
-              style={{ "--height": "90%" } as CSSProperties}
-            >
-              <i></i>
-            </div>
-            <div
-              className="chart-col"
-              style={{ "--height": "70%" } as CSSProperties}
-            >
-              <i></i>
-            </div>
-            <div
-              className="chart-col"
-              style={{ "--height": "15%" } as CSSProperties}
-            >
-              <i></i>
-            </div>
-            <div
-              className="chart-col today"
-              style={{ "--height": "30%" } as CSSProperties}
-            >
-              <i></i>
-            </div>
-          </div>
-          <div className="chart-labels" aria-hidden="true">
-            <span>T</span>
-            <span>W</span>
-            <span>T</span>
-            <span>F</span>
-            <span>S</span>
-            <span>S</span>
-            <span>M</span>
-          </div>
-          <div className="chart-summary">
-            <span>
-              Today <strong>6 breaks</strong>
-            </span>
-            <span>Illustrative data</span>
-          </div>
-        </div>
-      </figure>
-      <div className="section-copy">
-        <h2>
-          Small breaks.
-          <br />
-          <span className="accent-line">A habit you can see.</span>
+    <section className="section insights" id="habit" aria-labelledby="habit-title">
+      <div className="insights-copy">
+        <p className="label">05 — The habit</p>
+        <h2 id="habit-title">
+          <span className="line">Small breaks.</span>
+          <span className="line serif accent-line">A habit you can see.</span>
         </h2>
         <p>
           See the breaks you’ve taken today and across the week. A simple record
           of making a little time for yourself.
         </p>
-        <div className="privacy">
-          <Lock aria-hidden="true" />
-          Your history stays on your Mac.
-        </div>
+        <p className="label">Your history stays on your Mac.</p>
+      </div>
+      <p className="insights-figure" aria-hidden="true">
+        <span className="insights-84 serif">84</span>
+        <span className="label">breaks this week</span>
+      </p>
+      <div className="insights-window">
+        <StatisticsScreen />
       </div>
     </section>
   );

@@ -1,4 +1,6 @@
 import { ArrowDownToLine } from "lucide-react";
+import { sections } from "@/config/site";
+import { MobileNav } from "./MobileNav";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 export function Header({ home = "#main" }: { home?: string }) {
@@ -15,14 +17,20 @@ export function Header({ home = "#main" }: { home?: string }) {
           EyePause
         </a>
         <div className="nav-right">
-          <a className="nav-link" href={to("#details")}>
-            A closer look
-          </a>
+          <div className="nav-links">
+            {sections.map((section) => (
+              <a key={section.id} className="nav-link" data-nav={section.id} href={to(`#${section.id}`)}>
+                {section.label}
+              </a>
+            ))}
+            <span className="nav-indicator" aria-hidden="true" />
+          </div>
           <ThemeToggle />
           <a className="nav-download" href={to("#download")}>
             Download
             <ArrowDownToLine aria-hidden="true" />
           </a>
+          <MobileNav links={sections.map((section) => ({ href: to(`#${section.id}`), index: section.index, label: section.label }))} />
         </div>
       </nav>
     </header>

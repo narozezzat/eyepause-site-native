@@ -1,4 +1,3 @@
-import { EyeOff, HardDrive, UserX } from "lucide-react";
 import { DownloadPanel } from "@/components/download/DownloadPanel";
 import type { DownloadOption } from "@/lib/releases";
 export function Download({ options }: { options: DownloadOption[] }) {
@@ -8,37 +7,33 @@ export function Download({ options }: { options: DownloadOption[] }) {
       id="download"
       aria-labelledby="download-title"
     >
-      <div className="download-panel">
-        <div className="download-intro">
-          <div className="app-icon">
-            <svg aria-hidden="true">
-              <use href="#eye" />
-            </svg>
+      <div className="wrap">
+        <div className="download-panel">
+          <div className="download-intro">
+            <div className="app-icon" data-tilt>
+              <span className="app-icon-face">
+                <svg aria-hidden="true">
+                  <use href="#eye" />
+                </svg>
+              </span>
+              <i className="app-icon-shadow" aria-hidden="true" />
+            </div>
+            <p className="label">06 — Make room</p>
+            <h2 id="download-title">
+              <span className="line">A small addition.</span>
+              <span className="line serif accent-line">A welcome pause.</span>
+            </h2>
+            <p>
+              Give EyePause a place in your menu bar. Your next break is on us.
+            </p>
+            <ul className="facts">
+              <li>100% local</li>
+              <li>No account</li>
+              <li>No telemetry</li>
+            </ul>
           </div>
-          <h2 id="download-title">
-            A small addition.
-            <br />
-            <span className="accent-line">A welcome pause.</span>
-          </h2>
-          <p>
-            Give EyePause a place in your menu bar. Your next break is on us.
-          </p>
-          <ul className="assurances download-assurances">
-            <li>
-              <HardDrive aria-hidden="true" />
-              100% local
-            </li>
-            <li>
-              <UserX aria-hidden="true" />
-              No account
-            </li>
-            <li>
-              <EyeOff aria-hidden="true" />
-              No telemetry
-            </li>
-          </ul>
+          <DownloadPanel options={options} />
         </div>
-        <DownloadPanel options={options} />
       </div>
     </section>
   );
