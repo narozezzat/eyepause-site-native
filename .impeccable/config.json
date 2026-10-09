@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/app/globals.css"
+        ],
+        "createdAt": "2026-10-09T13:16:14.520Z",
+        "reason": "Agent triage: unchanged from HEAD; the border marks existing installer availability and error Notice states in DownloadButton.tsx, not decorative section-card chrome. Preserve the incumbent functional notice treatment."
+      }
+    ]
+  }
+}
